@@ -1,29 +1,26 @@
-package usecases
+package usecase
 
 import (
 	"context"
-	"lanchonete/domain"
 	"lanchonete/domain/repository"
+	"lanchonete/domain/usecases"
 	"lanchonete/domain/entities"
-	"lanchonete/usecases/cliente"
 )
 
-type ClienteUseCaseImpl struct {
-	criarClienteUC  *usecases.CriarClienteUseCase
-	buscarClienteUC *usecases.BuscarClienteUseCase
+type clienteUseCase struct {
+	clienteRepository repository.ClienteRepository
 }
 
-func NewClienteUseCase(clienteRepository repository.ClienteRepository) domain.ClienteUseCase {
-	return &ClienteUseCaseImpl{
-		criarClienteUC:  usecases.NewCriarClienteUseCase(clienteRepository),
-		buscarClienteUC: usecases.NewBuscarClienteUseCase(clienteRepository),
+func NewClienteUseCase(clienteRepository repository.ClienteRepository) usecases.ClienteUseCase {
+	return &clienteUseCase{
+		clienteRepository: clienteRepository,
 	}
 }
 
-func (uc *ClienteUseCaseImpl) CriarCliente(c context.Context, cliente *entities.Cliente) error {
-	return uc.criarClienteUC.CriarCliente(c, cliente)
+func (cuc *clienteUseCase) CriarCliente(c context.Context, cliente *entities.Cliente) error {
+	return cuc.clienteRepository.CriarCliente(c, cliente)
 }
 
-func (uc *ClienteUseCaseImpl) BuscarCliente(c context.Context, cpf string) (entities.Cliente, error) {
-	return uc.buscarClienteUC.BuscarCliente(c, cpf)
+func (cuc *clienteUseCase) BuscarCliente(c context.Context, CPF string) (entities.Cliente, error) {
+	return cuc.clienteRepository.BuscarCliente(c, CPF)
 }

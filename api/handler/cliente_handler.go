@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"net/http"
@@ -9,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ClienteController struct {
+type ClienteHandler struct {
 	ClienteUseCase usecases.ClienteUseCase
 }
 
-func (cc *ClienteController) CriarCliente(c *gin.Context) {
+func (cc *ClienteHandler) CriarCliente(c *gin.Context) {
 	var cliente entities.Cliente
 
 	err := c.ShouldBind(&cliente)
@@ -24,20 +24,20 @@ func (cc *ClienteController) CriarCliente(c *gin.Context) {
 
 	err = cc.ClienteUseCase.CriarCliente(c, &cliente)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, responses.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, domain.SuccessResponse{
+	c.JSON(http.StatusOK, responses.SuccessResponse{
 		Message: "Cliente criado com sucesso",
 	})
 }
 
-func (cc *ClienteController) BuscarCliente(c *gin.Context) {
+func (cc *ClienteHandler) BuscarCliente(c *gin.Context) {
 	CPF := c.Param("CPF")
 	cliente, err := cc.ClienteUseCase.BuscarCliente(c, CPF)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, responses.ErrorResponse{Message: err.Error()})
 		return
 	}
 

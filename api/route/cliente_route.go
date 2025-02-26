@@ -2,16 +2,16 @@ package route
 
 import (
 	"lanchonete/bootstrap"
-	"lanchonete/api/controller"
-	"lanchonete/usecases"
-	"lanchonete/mongo"
+	"lanchonete/api/handler"
+	"lanchonete/adapters/usecases"
+	"lanchonete/adapters/mongo"
 	"lanchonete/gateways"
 	"github.com/gin-gonic/gin"
 )
 
-func NewClienteRouter(env *bootstrap.Env, db mongo.Database, group *gin.RouterGroup) {
+func NewClienteRouter(env *bootstrap.Env, db *mongo.Database, group *gin.RouterGroup) {
 	cr := gateways.NewClienteGateway(db)
-	cc := &controller.ClienteController{
+	cc := &handler.ClienteHandler{
 		ClienteUseCase: usecases.NewClienteUseCase(cr),
 	}
 

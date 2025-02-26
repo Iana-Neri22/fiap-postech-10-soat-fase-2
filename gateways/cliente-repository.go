@@ -5,7 +5,7 @@ import (
 
 	"lanchonete/domain/repository"
 	"lanchonete/domain/entities"
-	"lanchonete/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

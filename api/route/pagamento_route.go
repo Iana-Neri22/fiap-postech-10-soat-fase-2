@@ -3,8 +3,8 @@ package route
 import (
 	"lanchonete/bootstrap"
 	"lanchonete/mongo"
-	"lanchonete/mercado-pago"
-	"lanchonete/pagamento"
+	"lanchonete/adapters/mercado_pago"
+	"lanchonete/api/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +15,8 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, group *gin.Router
 		mercadopago.MercadoPagoHandler(c, access_token)
 	})
 	group.POST("/pagamento/atualizado", mercadopago.WebhookHandler) 
-	group.GET("/pagamento/atualizado", pagamentohandler.WebhookHandlerGET)
-	group.GET("/pagamento/sucesso", pagamentohandler.SucessoHandler)
-	group.GET("/pagamento/pendente", pagamentohandler.PendenteHandler)
-	group.GET("/pagamento/falha", pagamentohandler.FalhaHandler)
+	group.GET("/pagamento/atualizado", (&handler.PagamentoHandler{}).WebhookHandler)
+	group.GET("/pagamento/sucesso", (&handler.PagamentoHandler{}).SucessoHandler)
+	group.GET("/pagamento/pendente", (&handler.PagamentoHandler{}).PendenteHandler)
+	group.GET("/pagamento/falha", (&handler.PagamentoHandler{}).FalhaHandler)
 }
