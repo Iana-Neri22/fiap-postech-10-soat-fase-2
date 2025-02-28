@@ -3,7 +3,7 @@ package route
 import (
 	"lanchonete/bootstrap"
 	"lanchonete/infra/database/mongo"
-	"lanchonete/adapters/mercado-pago"
+	"lanchonete/adapters/mercado_pago"
 	"lanchonete/api/handlers"
 	"github.com/gin-gonic/gin"
 )
