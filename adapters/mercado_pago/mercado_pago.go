@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"lanchonete/bootstrap"
 	"log"
 	"net/http"
 
-	//"strconv"
+	"lanchonete/infra/config"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mercadopago/sdk-go/pkg/config"
+	configMP "github.com/mercadopago/sdk-go/pkg/config" 
 
 	//"github.com/mercadopago/sdk-go/pkg/merchantorder"
 
@@ -22,7 +21,7 @@ import (
 )
 
 func WebhookHandler(c *gin.Context) {
-	access_token := bootstrap.NewEnv().AccessToken
+	access_token := config.NewEnv().AccessToken
 	paymentID := c.Query("id")
 
 	if paymentID == "" {
@@ -86,7 +85,7 @@ func WebhookHandler(c *gin.Context) {
 
 
 func MercadoPagoHandler(c *gin.Context, access_token string) {
-	cfg, err := config.New(access_token)
+	cfg, err := configMP.New(access_token)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

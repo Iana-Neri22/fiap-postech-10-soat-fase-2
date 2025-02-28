@@ -1,6 +1,6 @@
 package bootstrap
 
-import "lanchonete/mongo"
+import "lanchonete/infra/database/mongo"
 
 type Application struct {
 	Env   *Env
@@ -10,10 +10,10 @@ type Application struct {
 func App() Application {
 	app := &Application{}
 	app.Env = NewEnv()
-	app.Mongo = NewDatabase(app.Env)
+	app.Mongo = NewMongoDatabase(app.Env)
 	return *app
 }
 
 func (app *Application) CloseDBConnection() {
-	CloseConnection(app.Mongo)
+	CloseMongoDBConnection(app.Mongo)
 }

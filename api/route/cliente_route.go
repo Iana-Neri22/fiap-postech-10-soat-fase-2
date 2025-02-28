@@ -1,18 +1,20 @@
 package route
 
 import (
+	"lanchonete/api/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/api/handler"
-	"lanchonete/adapters/usecases"
-	"lanchonete/adapters/mongo"
+	"lanchonete/domain/services"
+	"lanchonete/infra/database/mongo"
 	"lanchonete/gateways"
+	"lanchonete/application/usecases"
+
 	"github.com/gin-gonic/gin"
 )
 
-func NewClienteRouter(env *bootstrap.Env, db *mongo.Database, group *gin.RouterGroup) {
-	cr := gateways.NewClienteGateway(db)
+func NewClienteRouter(env *bootstrap.Env, db mongo.Database, group *gin.RouterGroup) {
+	cr := gateways.NewClienteRepository(db, service.CollectionCliente)
 	cc := &handler.ClienteHandler{
-		ClienteUseCase: usecases.NewClienteUseCase(cr),
+		ClienteUseCase: usecase.NewClienteUseCase(cr),
 	}
 
 	group.GET("/cliente/:CPF", cc.BuscarCliente)

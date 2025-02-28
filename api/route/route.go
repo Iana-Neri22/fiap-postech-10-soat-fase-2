@@ -2,7 +2,7 @@ package route
 
 import (
 	"lanchonete/bootstrap"
-	"lanchonete/mongo"
+	"lanchonete/infra/database/mongo"
 
 	"github.com/gin-gonic/gin"
 )

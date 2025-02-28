@@ -5,18 +5,17 @@ import (
 
 	"lanchonete/domain/repository"
 	"lanchonete/domain/entities"
-	"go.mongodb.org/mongo-driver/mongo"
+	"lanchonete/infra/database/mongo"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
-
-const collection = "clientes"
 
 type clienteRepository struct {
 	database mongo.Database
 	collection string
 }
 
-func NewClienteGateway(db mongo.Database) repository.ClienteRepository {
+func NewClienteRepository(db mongo.Database, collection string) repository.ClienteRepository {
 	return &clienteRepository{
 		database: db,
 		collection: collection,
