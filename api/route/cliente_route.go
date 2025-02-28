@@ -11,12 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewClienteRouter(env *bootstrap.Env, db mongo.Database, group *gin.RouterGroup) {
+func NewClienteRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	cr := gateways.NewClienteRepository(db, service.CollectionCliente)
 	cc := &handler.ClienteHandler{
 		ClienteUseCase: usecase.NewClienteUseCase(cr),
 	}
 
-	group.GET("/cliente/:CPF", cc.BuscarCliente)
-	group.POST("/cliente", cc.CriarCliente)
+	router.GET("/cliente/:CPF", cc.BuscarCliente)
+	router.POST("/cliente", cc.CriarCliente)
 }

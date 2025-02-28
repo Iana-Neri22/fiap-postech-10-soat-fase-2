@@ -1,10 +1,12 @@
 package route
 
 import (
+	"lanchonete/adapters/mercado_pago"
+	handler "lanchonete/api/handlers"
 	"lanchonete/bootstrap"
 	"lanchonete/infra/database/mongo"
-	"lanchonete/adapters/mercado_pago"
-	"lanchonete/api/handlers"
+
+	//"lanchonete/api/handlers"
 	"github.com/gin-gonic/gin"
 )
 

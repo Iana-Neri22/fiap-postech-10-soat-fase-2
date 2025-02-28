@@ -15,9 +15,9 @@ func main() {
 	db := app.Mongo.Database(env.DBName)
 	defer app.CloseDBConnection()
 
-	gin := gin.Default()
+	ginEngine := gin.Default()
 
-	route.Setup(env, db, gin)
+	route.Setup(env, db, ginEngine)
 
-	gin.Run(env.ServerAddress)
+	ginEngine.Run(env.ServerAddress)
 }
