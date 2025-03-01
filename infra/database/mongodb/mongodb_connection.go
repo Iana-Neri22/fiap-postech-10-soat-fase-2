@@ -3,7 +3,7 @@ package mongodb
 import (
 	"context"
 
-	"lanchonete/infra/config"
+	"lanchonete/bootstrap"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -17,8 +17,8 @@ var (
 func NewMongoDBConnection(
 	ctx context.Context,
 ) (*mongo.Database, error) {
-	mongodb_uri := config.NewEnv().DBHost
-	mongodb_database := config.NewEnv().DBName
+	mongodb_uri := bootstrap.NewEnv().DBHost
+	mongodb_database := bootstrap.NewEnv().DBName
 
 	client, err := mongo.Connect(
 		ctx,
