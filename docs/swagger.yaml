@@ -1,0 +1,80 @@
+basePath: /
+definitions:
+  entities.Cliente:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      nome:
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  response.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API para o Tech Challenge 2 da FIAP - SOAT
+  title: Lanchonete API - Tech Challenge 2
+  version: "1.0"
+paths:
+  /cliente:
+    post:
+      consumes:
+      - application/json
+      description: Cria um cliente
+      parameters:
+      - description: Cliente
+        in: body
+        name: cliente
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Cliente'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Cria um cliente
+      tags:
+      - cliente
+  /cliente/{CPF}:
+    get:
+      consumes:
+      - application/json
+      description: Busca um cliente
+      parameters:
+      - description: CPF do cliente
+        in: path
+        name: CPF
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Cliente'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Busca um cliente
+      tags:
+      - cliente
+swagger: "2.0"

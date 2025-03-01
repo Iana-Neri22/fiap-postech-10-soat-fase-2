@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-
+	_"lanchonete/docs"
 	"lanchonete/domain/services"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
@@ -14,6 +14,16 @@ type ClienteHandler struct {
 	ClienteUseCase service.ClienteUseCase
 }
 
+// CriarCliente godoc
+// @Summary Cria um cliente	
+// @Description Cria um cliente
+// @Tags cliente
+// @Router /cliente [post]
+// @Accept  json
+// @Produce  json
+// @Param cliente body entities.Cliente true "Cliente"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (cc *ClienteHandler) CriarCliente(c *gin.Context) {
 	var cliente entities.Cliente
 
@@ -34,6 +44,16 @@ func (cc *ClienteHandler) CriarCliente(c *gin.Context) {
 	})
 }
 
+// BuscarCliente godoc
+// @Summary Busca um cliente
+// @Description Busca um cliente
+// @Tags cliente
+// @Router /cliente/{CPF} [get]
+// @Accept  json
+// @Produce  json
+// @Param CPF path string true "CPF do cliente"
+// @Success 200 {object} entities.Cliente
+// @Failure 400 {object} response.ErrorResponse
 func (cc *ClienteHandler) BuscarCliente(c *gin.Context) {
 	CPF := c.Param("CPF")
 	cliente, err := cc.ClienteUseCase.BuscarCliente(c, CPF)

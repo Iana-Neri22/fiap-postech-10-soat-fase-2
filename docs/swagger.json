@@ -1,0 +1,123 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API para o Tech Challenge 2 da FIAP - SOAT",
+        "title": "Lanchonete API - Tech Challenge 2",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/cliente": {
+            "post": {
+                "description": "Cria um cliente",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Cria um cliente",
+                "parameters": [
+                    {
+                        "description": "Cliente",
+                        "name": "cliente",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Cliente"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/cliente/{CPF}": {
+            "get": {
+                "description": "Busca um cliente",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cliente"
+                ],
+                "summary": "Busca um cliente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CPF do cliente",
+                        "name": "CPF",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Cliente"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entities.Cliente": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

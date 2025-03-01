@@ -9,7 +9,8 @@ import (
 
 func Setup(env *bootstrap.Env, db mongo.Database, gin gin.IRouter) {
 	router := gin.Group("")
-	
+		
+	NewDocRouter(router)
 	NewClienteRouter(env, db, router)
 	NewPagamentoRouter(env, db, router)
 }
