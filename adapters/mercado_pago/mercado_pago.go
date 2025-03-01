@@ -8,8 +8,6 @@ import (
 	"log"
 	"net/http"
 
-	"lanchonete/infra/config"
-
 	"github.com/gin-gonic/gin"
 	configMP "github.com/mercadopago/sdk-go/pkg/config" 
 
@@ -18,10 +16,12 @@ import (
 	//"github.com/mercadopago/sdk-go/pkg/payment"
 	//"github.com/mercadopago/sdk-go/pkg/merchantorder"
 	"github.com/mercadopago/sdk-go/pkg/preference"
+
+	"lanchonete/bootstrap"
 )
 
 func WebhookHandler(c *gin.Context) {
-	access_token := config.NewEnv().AccessToken
+	access_token := bootstrap.NewEnv().AccessToken
 	paymentID := c.Query("id")
 
 	if paymentID == "" {
