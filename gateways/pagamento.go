@@ -46,6 +46,11 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 	}
 }
 
+func (pg *pagamentoRepository) ConfirmarPagamento(c context.Context, pagamento *entities.Pagamento) error {
+	// Implement the logic here
+	return nil
+}
+
 func (pg *pagamentoRepository) EnviarPagamento(c context.Context, pagamento *entities.Pagamento) error {
 
 	paymentData := map[string]interface{}{

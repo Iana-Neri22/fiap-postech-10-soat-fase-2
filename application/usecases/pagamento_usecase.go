@@ -21,3 +21,7 @@ func (uc *pagamentoUseCase) EnviarPagamento(c context.Context, pagamento *entiti
 	return uc.pagamentoRepository.EnviarPagamento(c, pagamento)
 }
 
+func (uc *pagamentoUseCase) ConfirmarPagamento(c context.Context, pagamento *entities.Pagamento) error {
+	return uc.pagamentoRepository.ConfirmarPagamento(c, pagamento)
+}
+

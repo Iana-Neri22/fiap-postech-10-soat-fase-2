@@ -31,5 +31,6 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.Route
 	gateways.RegisterPaymentRoutes(redisClient)
 
 	router.POST("/pagamento", pc.EnviarPagamento)
+	router.POST("/pagamento/confirmar", pc.ConfirmarPagamento)
 
 }
