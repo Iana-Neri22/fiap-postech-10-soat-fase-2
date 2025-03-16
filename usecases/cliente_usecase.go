@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
+	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
 	"lanchonete/domain/usecases"
-	"lanchonete/domain/entities"
 )
 
 type clienteUseCase struct {
@@ -24,3 +24,4 @@ func (cuc *clienteUseCase) CriarCliente(c context.Context, cliente *entities.Cli
 func (cuc *clienteUseCase) BuscarCliente(c context.Context, CPF string) (entities.Cliente, error) {
 	return cuc.clienteRepository.BuscarCliente(c, CPF)
 }
+

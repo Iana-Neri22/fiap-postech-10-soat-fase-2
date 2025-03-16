@@ -1,24 +1,35 @@
 package route
 
 import (
-	"lanchonete/adapters/mercado_pago"
-	handler "lanchonete/api/handlers"
+	"lanchonete/api/handlers"
+	"lanchonete/application/usecases"
 	"lanchonete/bootstrap"
+	"lanchonete/domain/services"
+	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
+	"os"
 
-	//"lanchonete/api/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 )
 
-func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, group *gin.RouterGroup) {
-	
-	group.POST("/pagamento", func(c *gin.Context) {
-		access_token := env.AccessToken
-		mercadopago.MercadoPagoHandler(c, access_token)
+func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
+
+	redisAddress := os.Getenv("REDIS_ADDRESS")
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     redisAddress,
+		Password: "", // no password set
+		DB:       0,  // use default DB
 	})
-	group.POST("/pagamento/atualizado", mercadopago.WebhookHandler) 
-	group.GET("/pagamento/atualizado", handler.WebhookHandlerGET)
-	group.GET("/pagamento/sucesso", handler.SucessoHandler)
-	group.GET("/pagamento/pendente", handler.PendenteHandler)
-	group.GET("/pagamento/falha", handler.FalhaHandler)
+
+
+	pr := gateways.NewPagamentoRepository(db, service.CollectionPagamento)
+	pc := &handler.PagamentoHandler{
+		PagamentoUseCase: usecase.NewPagamentoUseCase(pr),
+	}
+
+	gateways.RegisterPaymentRoutes(redisClient)
+
+	router.POST("/pagamento", pc.EnviarPagamento)
+
 }

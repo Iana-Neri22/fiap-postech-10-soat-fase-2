@@ -1,31 +1,40 @@
 package handler
 
 import (
+	_ "lanchonete/docs"
+	"lanchonete/domain/entities"
+	"lanchonete/domain/responses"
+	"lanchonete/domain/services"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 )
 
-func SucessoHandler(c *gin.Context) {
-	c.JSON(200, gin.H{"response": "success"})
+type PagamentoHandler struct {
+	PagamentoUseCase service.PagamentoUseCase
 }
 
-func PendenteHandler(c *gin.Context) {
-	c.JSON(200, gin.H{"response": "success"})
-}
-
-func FalhaHandler(c *gin.Context) {
-	c.JSON(200, gin.H{"response": "success"})
-}
+func (cc *PagamentoHandler) EnviarPagamento(c *gin.Context) {
+	var pagamento entities.Pagamento
 
 
 
-
-func WebhookHandlerGET(c *gin.Context) {
-	if c.Request.Method != "GET" {
-		c.JSON(405, gin.H{"error": "Method not allowed"})
+	err := c.ShouldBind(&pagamento)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
-	println("Teste 2")
-	println(c.Request.Body)
-	c.JSON(200, gin.H{"response": "webhook"})
+
+	err = cc.PagamentoUseCase.EnviarPagamento(c, &pagamento)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, response.SuccessResponse{
+		Message: "Pagaamento enviado com sucesso",
+	})
 }
+
+
