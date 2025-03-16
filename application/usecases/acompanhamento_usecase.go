@@ -4,23 +4,30 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-	"lanchonete/domain/usecases"
+	"lanchonete/domain/services"
 )
 
-type AcompanhamentoUseCase struct {
+type acompanhamentoUseCase struct {
 	acompanhamentoRepo repository.AcompanhamentoRepository
 }
 
-func NewAcompanhamentoUseCase(acompanhamentoRepo repository.AcompanhamentoRepository) usecases.AcompanhamentoUseCase {
-	return &AcompanhamentoUseCase{
+func NewAcompanhamentoUseCase(acompanhamentoRepo repository.AcompanhamentoRepository) service.AcompanhamentoUseCase {
+	return &acompanhamentoUseCase{
 		acompanhamentoRepo: acompanhamentoRepo,
 	}
 }
 
-func (uc *AcompanhamentoUseCase) BuscarPedidos(c context.Context, nroPedido string) (entities.Pedido, error) {
+func (uc *acompanhamentoUseCase) CriarAcompanhamento(c context.Context, acompanhamento *entities.AcompanhamentoPedido) error {
+	return uc.acompanhamentoRepo.CriarAcompanhamento(c, acompanhamento)
+}
+
+func (uc *acompanhamentoUseCase) BuscarPedido(c context.Context, nroPedido string) (entities.Pedido, error) {
 	return uc.acompanhamentoRepo.BuscarPedidos(c, nroPedido)
 }
 
-func (uc *AcompanhamentoUseCase) AcompanharPedido(c context.Context, pedido *entities.Pedido) error {
-	return uc.acompanhamentoRepo.AcompanharPedido(c, pedido)
+func (uc *acompanhamentoUseCase) AdicionarPedido(pedido *entities.Pedido) {
+	pedido.mu.Lock()
+	defer pedido.mu.Unlock()
+
+	uc.Pedidos = append(uc.Pedidos, pedido)
 }
