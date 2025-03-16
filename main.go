@@ -13,6 +13,7 @@ import (
 
 // @host localhost:8080
 // @BasePath /
+//go:generate go run github.com/swaggo/swag/cmd/swag@latest init
 func main() {
 
 	app := bootstrap.App()

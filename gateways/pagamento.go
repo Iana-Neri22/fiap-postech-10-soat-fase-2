@@ -2,34 +2,111 @@ package gateways
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"math/rand"
+	"net/http"
+	"os"
+	"time"
 
+	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
 	"lanchonete/infra/database/mongo"
 
+	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 )
 
-type pagamentoGateway struct {
-	database mongo.Database
-	collection string
+type pagamentoRepository struct {
+	database    mongo.Database
+	collection  string
+	redisClient *redis.Client
 }
 
-func NewPagamentoGateway(db mongo.Database, collection string) repository.ClienteRepository {
-	return &clienteRepository{
-		database: db,
-		collection: collection,
+func NewPagamentoRepository(db mongo.Database, collection string) repository.PagamentoRepository {
+	// Initialize the Redis client
+	redisAddress := os.Getenv("REDIS_ADDRESS")
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     redisAddress, // Redis server address
+		Password: "",          // No password
+		DB:       0,           // Default DB
+	})
+
+	// Ping Redis to check the connection
+	//ctx := context.Background()
+	_, err := redisClient.Ping().Result()
+	if err != nil {
+		panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+	}
+
+	return &pagamentoRepository{
+		database:    db,
+		collection:  collection,
+		redisClient: redisClient,
 	}
 }
 
-func (pg *pagamentoGateway) RealizarPagamento(c context.Context, pedido struct {
-	ID          string
-	Title       string
-	UnitPrice   int
-	Quantity    int
-	Description string
-	CurrencyID  string
-}) error {
-	collection := pg.database.Collection(pg.collection)
-	_, err := collection.InsertOne(c, pedido)
+func (pg *pagamentoRepository) EnviarPagamento(c context.Context, pagamento *entities.Pagamento) error {
 
-	return err
+	paymentData := map[string]interface{}{
+		"id":      pagamento.ID,
+		"amount":  pagamento.Valor,
+		"status":  pagamento.Status,
+		"created": time.Now().Format("02/01/2006, 15:04:05"),
+	}
+
+	webhookPayloadJSON, err := json.Marshal(paymentData)
+	if err != nil {
+		return fmt.Errorf("failed to marshal payment data: %v", err)
+	}
+
+	err = pg.redisClient.Publish("payments", webhookPayloadJSON).Err()
+	if err != nil {
+		return fmt.Errorf("failed to publish payment to Redis: %v", err)
+	}
+
+	fmt.Println("Payment sent to Redis:", string(webhookPayloadJSON))
+	return nil
+}
+
+// RegisterPaymentRoutes registers the HTTP routes for payments.
+func RegisterPaymentRoutes(redisClient *redis.Client) {
+	http.HandleFunc("/payment", func(w http.ResponseWriter, r *http.Request) {
+		paymentData := getPayment()
+		webhookPayloadJSON, err := json.Marshal(paymentData)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = redisClient.Publish("payments", webhookPayloadJSON).Err()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(webhookPayloadJSON)
+		println("Payment sent to Redis")
+	})
+}
+
+func getPayment() map[string]interface{} {
+	rand.Seed(time.Now().UnixNano())
+	letters := []rune("abcdxyzpqr")
+	paymentID := make([]rune, 5)
+	for i := range paymentID {
+		paymentID[i] = letters[rand.Intn(len(letters))]
+	}
+
+	return map[string]interface{}{
+		"url":       os.Getenv("WEBHOOK_ADDRESS"),
+		"webhookId": uuid.New().String(),
+		"data": map[string]interface{}{
+			"id":      uuid.New().String(),
+			"payment": fmt.Sprintf("PY-%s", string(paymentID)),
+			"event":   []string{"accepted", "completed", "canceled"}[rand.Intn(3)],
+			"created": time.Now().Format("02/01/2006, 15:04:05"),
+		},
+	}
 }
