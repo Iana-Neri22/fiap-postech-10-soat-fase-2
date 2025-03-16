@@ -37,3 +37,12 @@ func (ar *acompanhamentoRepository) BuscarPedidos(c context.Context, nroPedido s
 	err := collection.FindOne(c, bson.M{"nroPedido": nroPedido}).Decode(&pedido)
 	return pedido, err
 }
+
+func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, p *entities.Pedido) error {
+	pedido, err := ar.BuscarPedidos(c, p.ID)
+	if err != nil {
+		return err
+	}
+	acompanhamento.Pedidos.Enfileirar(pedido)
+	return nil
+}

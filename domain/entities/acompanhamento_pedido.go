@@ -4,7 +4,7 @@ import (
 	"time"
 )
 type AcompanhamentoPedido struct {
-	Pedidos []Pedido
+	Pedidos FilaPedidos
 	TempoEstimado time.Duration
 	UltimaAtualizacao time.Time
 }

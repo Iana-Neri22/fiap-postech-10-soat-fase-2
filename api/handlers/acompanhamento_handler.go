@@ -49,3 +49,29 @@ func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 
 	p.JSON(http.StatusOK, pedido)
 }
+
+func (ah *AcompanhamentoHandler) AdicionarPedido(p *gin.Context) {
+	ID := p.Param("ID")
+	pedido, err := ah.AcompanhamentoUseCase.BuscarPedido(p, ID)
+	if err != nil {
+		p.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var acompanhamento entities.AcompanhamentoPedido
+	err = p.ShouldBind(&acompanhamento)
+	if err != nil {
+		p.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	err = ah.AcompanhamentoUseCase.AdicionarPedido(p, &acompanhamento, &pedido)
+	if err != nil {
+		p.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	p.JSON(http.StatusOK, response.SuccessResponse{
+		Message: "Pedido adicionado com sucesso",
+	})
+}
