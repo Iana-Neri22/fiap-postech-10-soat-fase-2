@@ -92,6 +92,86 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/pagamento": {
+            "post": {
+                "description": "Envia o pagamento para o webhook",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pagamento"
+                ],
+                "summary": "Envia o pagamento para o webhook",
+                "parameters": [
+                    {
+                        "description": "Pagamento",
+                        "name": "pagamento",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pagamento"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pagamento/confirmar": {
+            "post": {
+                "description": "Confirma o pagamento",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pagamento"
+                ],
+                "summary": "Confirma o pagamento",
+                "parameters": [
+                    {
+                        "description": "Pagamento",
+                        "name": "pagamento",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pagamento"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -105,6 +185,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "nome": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.Pagamento": {
+            "type": "object",
+            "properties": {
+                "dataCriacao": {
+                    "type": "string"
+                },
+                "idPagamento": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "valor": {
                     "type": "string"
                 }
             }

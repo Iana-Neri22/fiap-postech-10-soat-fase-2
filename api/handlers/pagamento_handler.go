@@ -17,10 +17,18 @@ type PagamentoHandler struct {
 	PagamentoUseCase service.PagamentoUseCase
 }
 
+// EnviarPagamento godoc
+// @Summary Envia o pagamento para o webhook	
+// @Description Envia o pagamento para o webhook
+// @Tags pagamento
+// @Router /pagamento [post]
+// @Accept  json
+// @Produce  json
+// @Param pagamento body entities.Pagamento true "Pagamento"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (ph *PagamentoHandler) EnviarPagamento(c *gin.Context) {
 	var pagamento entities.Pagamento
-
-
 
 	err := c.ShouldBind(&pagamento)
 	if err != nil {
@@ -35,10 +43,20 @@ func (ph *PagamentoHandler) EnviarPagamento(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Pagaamento enviado com sucesso",
+		Message: "Pagamento enviado com sucesso",
 	})
 }
 
+// ConfirmarPagamento godoc
+// @Summary Confirma o pagamento	
+// @Description Confirma o pagamento
+// @Tags pagamento
+// @Router /pagamento/confirmar [post]
+// @Accept  json
+// @Produce  json
+// @Param pagamento body entities.Pagamento true "Pagamento"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (ph *PagamentoHandler) ConfirmarPagamento(c *gin.Context) {
 	// Read the request body
 	body, err := io.ReadAll(c.Request.Body)
