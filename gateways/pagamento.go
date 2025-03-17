@@ -54,10 +54,14 @@ func (pg *pagamentoRepository) ConfirmarPagamento(c context.Context, pagamento *
 func (pg *pagamentoRepository) EnviarPagamento(c context.Context, pagamento *entities.Pagamento) error {
 
 	paymentData := map[string]interface{}{
-		"id":      pagamento.ID,
-		"amount":  pagamento.Valor,
-		"status":  pagamento.Status,
-		"created": time.Now().Format("02/01/2006, 15:04:05"),
+		"url": "http://host.docker.internal:8080/pagamento/confirmar",
+		"webhookId": uuid.New().String(),
+		"data": map[string]interface{}{
+			"idPagamento": pagamento.IdPagamento,
+			"valor":       pagamento.Valor,
+			"status":      pagamento.Status,
+			"dataCriacao": time.Now().Format("02/01/2006, 15:04:05"),
+		},
 	}
 
 	webhookPayloadJSON, err := json.Marshal(paymentData)
@@ -108,7 +112,7 @@ func getPayment() map[string]interface{} {
 		"url":       os.Getenv("WEBHOOK_ADDRESS"),
 		"webhookId": uuid.New().String(),
 		"data": map[string]interface{}{
-			"id":      uuid.New().String(),
+			"id":      "123456",
 			"payment": fmt.Sprintf("PY-%s", string(paymentID)),
 			"event":   []string{"accepted", "completed", "canceled"}[rand.Intn(3)],
 			"created": time.Now().Format("02/01/2006, 15:04:05"),
