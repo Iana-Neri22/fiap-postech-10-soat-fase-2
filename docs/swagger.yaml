@@ -47,6 +47,17 @@ definitions:
     - EmPreparacao
     - Pronto
     - Finalizado
+  entities.Pagamento:
+    properties:
+      dataCriacao:
+        type: string
+      idPagamento:
+        type: string
+      status:
+        type: string
+      valor:
+        type: string
+    type: object
   response.ErrorResponse:
     properties:
       message:
@@ -267,4 +278,86 @@ paths:
       summary: Busca um pedido
       tags:
       - pedido
+    post:
+      consumes:
+      - application/json
+      description: Adiciona um pedido
+      parameters:
+      - description: ID do pedido
+        in: path
+        name: ID
+        required: true
+        type: string
+      - description: Pedido
+        in: body
+        name: pedido
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pedido'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Adiciona um pedido
+      tags:
+      - pedido
+  /pagamento:
+    post:
+      consumes:
+      - application/json
+      description: Envia o pagamento para o webhook
+      parameters:
+      - description: Pagamento
+        in: body
+        name: pagamento
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pagamento'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Envia o pagamento para o webhook
+      tags:
+      - pagamento
+  /pagamento/confirmar:
+    post:
+      consumes:
+      - application/json
+      description: Confirma o pagamento
+      parameters:
+      - description: Pagamento
+        in: body
+        name: pagamento
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pagamento'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Confirma o pagamento
+      tags:
+      - pagamento
 swagger: "2.0"

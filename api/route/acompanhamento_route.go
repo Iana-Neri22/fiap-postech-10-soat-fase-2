@@ -6,13 +6,13 @@ import (
 	"lanchonete/bootstrap"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
-	"lanchonete/domain/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	ar := gateways.NewAcompanhamentoRepository(db, service.CollectionPedido)
+	collection := "pedido"
+	ar := gateways.NewAcompanhamentoRepository(db, collection)
 	auc := &handler.AcompanhamentoHandler{
 		AcompanhamentoUseCase: usecase.NewAcompanhamentoUseCase(ar),
 	}

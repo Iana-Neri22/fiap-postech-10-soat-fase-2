@@ -4,7 +4,6 @@ import (
 	"lanchonete/api/handlers"
 	"lanchonete/application/usecases"
 	"lanchonete/bootstrap"
-	"lanchonete/domain/services"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
 	"os"
@@ -22,8 +21,9 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.Route
 		DB:       0,  // use default DB
 	})
 
+	collection := "pagamento"
 
-	pr := gateways.NewPagamentoRepository(db, service.CollectionPagamento)
+	pr := gateways.NewPagamentoRepository(db, collection)
 	pc := &handler.PagamentoHandler{
 		PagamentoUseCase: usecase.NewPagamentoUseCase(pr),
 	}
@@ -31,5 +31,6 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.Route
 	gateways.RegisterPaymentRoutes(redisClient)
 
 	router.POST("/pagamento", pc.EnviarPagamento)
+	router.POST("/pagamento/confirmar", pc.ConfirmarPagamento)
 
 }

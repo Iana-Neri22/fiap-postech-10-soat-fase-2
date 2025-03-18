@@ -5,6 +5,10 @@ import (
 	"lanchonete/domain/entities"
 )
 
+const (
+	CollectionAcompanhamento = "acompanhamento"
+)
+
 type AcompanhamentoUseCase interface {
 	CriarAcompanhamento(C context.Context, acompanhamento *entities.AcompanhamentoPedido) error
 	BuscarPedido(C context.Context, nroPedido string) (entities.Pedido, error)

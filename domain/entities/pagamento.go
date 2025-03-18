@@ -6,20 +6,20 @@ import (
 )
 
 type Pagamento struct {
-	ID  string
-	Valor float64
+	IdPagamento  string
+	Valor string
 	Status   string
 	DataCriacao string
 }
 
-func PagamentoNew(id string, valor float64, status string, dataCriacao string) (*Pagamento, error) {
+func PagamentoNew(idPagamento string, valor string, status string, dataCriacao string) (*Pagamento, error) {
 
-	if  strings.TrimSpace(id) == "" || strings.TrimSpace(status) == "" || strings.TrimSpace(dataCriacao) == "" {
+	if  strings.TrimSpace(idPagamento) == "" || strings.TrimSpace(status) == "" || strings.TrimSpace(dataCriacao) == "" {
 		return nil, errors.New("nenhum dos campos podem estar em branco")
 	}	
 
 	return &Pagamento{
-		ID:  id,
+		IdPagamento:  idPagamento,
 		Valor: valor,
 		Status: status,	
 		DataCriacao: dataCriacao,

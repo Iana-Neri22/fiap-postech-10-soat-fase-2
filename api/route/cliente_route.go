@@ -3,7 +3,6 @@ package route
 import (
 	"lanchonete/api/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/domain/services"
 	"lanchonete/infra/database/mongo"
 	"lanchonete/gateways"
 	"lanchonete/application/usecases"
@@ -12,7 +11,8 @@ import (
 )
 
 func NewClienteRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	cr := gateways.NewClienteRepository(db, service.CollectionCliente)
+	collection := "cliente"
+	cr := gateways.NewClienteRepository(db, collection)
 	cc := &handler.ClienteHandler{
 		ClienteUseCase: usecase.NewClienteUseCase(cr),
 	}
