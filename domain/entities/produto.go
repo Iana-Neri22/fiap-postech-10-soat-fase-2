@@ -13,6 +13,7 @@ const (
 	Lanche         CatProduto = "Lanche"
 	Acompanhamento CatProduto = "Acompanhamento"
 	Bebida         CatProduto = "Bebida"
+	Sobremesa      CatProduto = "Sobremesa"
 )
 
 type Produto struct {

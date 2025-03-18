@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -18,7 +19,7 @@ const (
 )
 
 type Pedido struct {
-	Identificacao     string
+	Identificacao     uuid.UUID
 	Produtos          []Produto
 	Status            StatusPedido
 	TimeStamp         time.Time
@@ -26,9 +27,22 @@ type Pedido struct {
 	Total             decimal.Decimal
 }
 
-func PedidoNew(identificacao string, produtos []Produto) (*Pedido, error) {
-	if identificacao == "" || len(produtos) == 0 {
-		return nil, errors.New("todos os campos são obrigatórios")
+func PedidoNew(produtos []Produto) (*Pedido, error) {
+	id := uuid.New()
+
+	if len(produtos) == 0 {
+		return nil, errors.New("o pedido precisa ter ao menos um produto")
+	}
+
+	temLanche := false
+	for _, produto := range produtos {
+		if produto.Categoria == Lanche {
+			temLanche = true
+			break
+		}
+	}
+	if !temLanche {
+		return nil, errors.New("o pedido precisa ter ao menos um lanche")
 	}
 
 	var total decimal.Decimal
@@ -37,7 +51,7 @@ func PedidoNew(identificacao string, produtos []Produto) (*Pedido, error) {
 	}
 
 	return &Pedido{
-		Identificacao:     identificacao,
+		Identificacao:     id,
 		Produtos:          produtos,
 		Status:            Pendente,
 		TimeStamp:         time.Now(),

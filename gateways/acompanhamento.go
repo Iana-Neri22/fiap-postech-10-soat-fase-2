@@ -39,7 +39,7 @@ func (ar *acompanhamentoRepository) BuscarPedidos(c context.Context, nroPedido s
 }
 
 func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, p *entities.Pedido) error {
-	pedido, err := ar.BuscarPedidos(c, p.Identificacao)
+	pedido, err := ar.BuscarPedidos(c, p.Identificacao.String())
 	if err != nil {
 		return err
 	}
