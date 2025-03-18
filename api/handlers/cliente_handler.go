@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 	_"lanchonete/docs"
-	"lanchonete/domain/services"
+	"lanchonete/domain/usecases"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
 	
@@ -11,7 +11,7 @@ import (
 )
 
 type ClienteHandler struct {
-	ClienteUseCase service.ClienteUseCase
+	ClienteUseCase usecases.ClienteUseCase
 }
 
 // CriarCliente godoc

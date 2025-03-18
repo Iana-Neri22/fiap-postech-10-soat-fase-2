@@ -9,6 +9,17 @@ definitions:
       nome:
         type: string
     type: object
+  entities.Pagamento:
+    properties:
+      dataCriacao:
+        type: string
+      idPagamento:
+        type: string
+      status:
+        type: string
+      valor:
+        type: string
+    type: object
   response.ErrorResponse:
     properties:
       message:
@@ -77,4 +88,56 @@ paths:
       summary: Busca um cliente
       tags:
       - cliente
+  /pagamento:
+    post:
+      consumes:
+      - application/json
+      description: Envia o pagamento para o webhook
+      parameters:
+      - description: Pagamento
+        in: body
+        name: pagamento
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pagamento'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Envia o pagamento para o webhook
+      tags:
+      - pagamento
+  /pagamento/confirmar:
+    post:
+      consumes:
+      - application/json
+      description: Confirma o pagamento
+      parameters:
+      - description: Pagamento
+        in: body
+        name: pagamento
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pagamento'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Confirma o pagamento
+      tags:
+      - pagamento
 swagger: "2.0"
