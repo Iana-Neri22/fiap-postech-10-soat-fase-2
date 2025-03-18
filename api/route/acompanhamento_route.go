@@ -11,8 +11,8 @@ import (
 )
 
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	collection := "pedido"
-	ar := gateways.NewAcompanhamentoRepository(db, collection)
+	
+	ar := gateways.NewAcompanhamentoRepository(db, CollectionPedido)
 	auc := &handler.AcompanhamentoHandler{
 		AcompanhamentoUseCase: usecase.NewAcompanhamentoUseCase(ar),
 	}

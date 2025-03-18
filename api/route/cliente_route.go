@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
 func NewClienteRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	collection := "cliente"
-	cr := gateways.NewClienteRepository(db, collection)
+	cr := gateways.NewClienteRepository(db, collectionCliente)
 	cc := &handler.ClienteHandler{
 		ClienteUseCase: usecase.NewClienteUseCase(cr),
 	}
