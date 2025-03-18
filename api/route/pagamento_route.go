@@ -25,7 +25,8 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.Route
 
 	pr := gateways.NewPagamentoRepository(db, collection)
 	pc := &handler.PagamentoHandler{
-		PagamentoUseCase: usecase.NewPagamentoUseCase(pr),
+		EnviarPagamentoUseCase: usecase.NewEnviarPagamentoUseCase(pr),
+		ConfirmarPagamentoUseCase: usecase.NewConfirmarPagamentoUseCase(pr),
 	}
 
 	gateways.RegisterPaymentRoutes(redisClient)
