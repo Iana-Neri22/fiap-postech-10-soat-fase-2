@@ -5,6 +5,6 @@ import (
 	"lanchonete/domain/entities"
 )
 
-type PagamentoUseCase interface {
+type EnviarPagamentoUseCase interface {
 	EnviarPagamento(c context.Context, pagamento *entities.Pagamento) error
 }

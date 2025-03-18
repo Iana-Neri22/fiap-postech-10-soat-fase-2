@@ -7,14 +7,15 @@ import (
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
-	"lanchonete/domain/services"
+	"lanchonete/domain/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type PagamentoHandler struct {
-	PagamentoUseCase service.PagamentoUseCase
+	EnviarPagamentoUseCase usecases.EnviarPagamentoUseCase
+	ConfirmarPagamentoUseCase usecases.ConfirmarPagamentoUseCase
 }
 
 // EnviarPagamento godoc
@@ -36,7 +37,7 @@ func (ph *PagamentoHandler) EnviarPagamento(c *gin.Context) {
 		return
 	}
 
-	err = ph.PagamentoUseCase.EnviarPagamento(c, &pagamento)
+	err = ph.EnviarPagamentoUseCase.EnviarPagamento(c, &pagamento)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
@@ -80,7 +81,7 @@ func (ph *PagamentoHandler) ConfirmarPagamento(c *gin.Context) {
 	fmt.Printf("Parsed pagamento: %+v\n", pagamento)
 
 	// Call the use case to confirm the payment
-	if err := ph.PagamentoUseCase.ConfirmarPagamento(c, &pagamento); err != nil {
+	if err := ph.ConfirmarPagamentoUseCase.ConfirmarPagamento(c, &pagamento); err != nil {
 		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}

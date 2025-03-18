@@ -36,7 +36,8 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 	//ctx := context.Background()
 	_, err := redisClient.Ping().Result()
 	if err != nil {
-		panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+		//panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+		fmt.Printf("Failed to connect to Redis: %v\n", err)
 	}
 
 	return &pagamentoRepository{

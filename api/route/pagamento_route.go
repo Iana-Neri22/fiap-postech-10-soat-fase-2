@@ -12,6 +12,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
+
 func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 
 	redisAddress := os.Getenv("REDIS_ADDRESS")
@@ -21,11 +22,10 @@ func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.Route
 		DB:       0,  // use default DB
 	})
 
-	collection := "pagamento"
-
-	pr := gateways.NewPagamentoRepository(db, collection)
+	pr := gateways.NewPagamentoRepository(db, collectionPagamento)
 	pc := &handler.PagamentoHandler{
-		PagamentoUseCase: usecase.NewPagamentoUseCase(pr),
+		EnviarPagamentoUseCase: usecase.NewEnviarPagamentoUseCase(pr),
+		ConfirmarPagamentoUseCase: usecase.NewConfirmarPagamentoUseCase(pr),
 	}
 
 	gateways.RegisterPaymentRoutes(redisClient)

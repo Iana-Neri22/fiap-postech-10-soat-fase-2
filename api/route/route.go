@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const collectionCliente = "cliente"
+const collectionPagamento = "pagamento"
+const CollectionPedido = "pedido"
+
 func Setup(env *bootstrap.Env, db mongo.Database, gin gin.IRouter) {
 	router := gin.Group("")
 		
