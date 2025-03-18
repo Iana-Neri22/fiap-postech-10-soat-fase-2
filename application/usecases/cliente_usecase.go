@@ -4,14 +4,14 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-	"lanchonete/domain/services"
+	"lanchonete/domain/usecases"
 )
 
 type clienteUseCase struct {
 	clienteRepository repository.ClienteRepository
 }
 
-func NewClienteUseCase(clienteRepository repository.ClienteRepository) service.ClienteUseCase {
+func NewClienteUseCase(clienteRepository repository.ClienteRepository) usecases.ClienteUseCase {
 	return &clienteUseCase{
 		clienteRepository: clienteRepository,
 	}
