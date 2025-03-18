@@ -15,6 +15,129 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/acompanhamento": {
+            "post": {
+                "description": "Cria um acompanhamento",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Cria um acompanhamento",
+                "parameters": [
+                    {
+                        "description": "Acompanhamento",
+                        "name": "acompanhamento",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/acompanhamento/{nroPedido}": {
+            "get": {
+                "description": "Busca um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Busca um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Adiciona um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Adiciona um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Acompanhamento",
+                        "name": "acompanhamento",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/cliente": {
             "post": {
                 "description": "Cria um cliente",
@@ -92,9 +215,101 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/pedidos": {
+            "post": {
+                "description": "Cria um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Cria um pedido",
+                "parameters": [
+                    {
+                        "description": "Pedido",
+                        "name": "pedido",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/{nroPedido}": {
+            "get": {
+                "description": "Busca um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Busca um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Número do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "entities.AcompanhamentoPedido": {
+            "type": "object",
+            "properties": {
+                "pedidos": {
+                    "$ref": "#/definitions/entities.FilaPedidos"
+                },
+                "tempoEstimado": {
+                    "$ref": "#/definitions/time.Duration"
+                },
+                "ultimaAtualizacao": {
+                    "type": "string"
+                }
+            }
+        },
         "entities.Cliente": {
             "type": "object",
             "properties": {
@@ -108,6 +323,46 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "entities.FilaPedidos": {
+            "type": "object"
+        },
+        "entities.Pedido": {
+            "type": "object",
+            "properties": {
+                "categoria": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/entities.StatusPedido"
+                },
+                "timeStamp": {
+                    "type": "string"
+                },
+                "ultimaAtualizacao": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.StatusPedido": {
+            "type": "string",
+            "enum": [
+                "Pendente",
+                "Recebido",
+                "Em preparação",
+                "Pronto",
+                "Finalizado"
+            ],
+            "x-enum-varnames": [
+                "Pendente",
+                "Recebido",
+                "EmPreparacao",
+                "Pronto",
+                "Finalizado"
+            ]
         },
         "response.ErrorResponse": {
             "type": "object",
@@ -124,6 +379,29 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "time.Duration": {
+            "type": "integer",
+            "enum": [
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
+            ],
+            "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour"
+            ]
         }
     }
 }`
