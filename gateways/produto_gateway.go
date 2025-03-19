@@ -28,19 +28,11 @@ func (pd *ProdutoGateway) AdicionarProduto(c context.Context, produto *entities.
 	return err
 }
 
-<<<<<<< HEAD
-func (pd *ProdutoGateway) BuscarProdutoPorId(c context.Context, nome string) (*entities.Produto, error) {
-=======
 func (pd *ProdutoGateway) BuscarProdutoPorId(c context.Context, id string) (*entities.Produto, error) {
->>>>>>> iana
 	collection := pd.database.Collection(pd.collection)
 
 	var produto *entities.Produto
 
-<<<<<<< HEAD
-	err := collection.FindOne(c, bson.M{"nome": nome}).Decode(&produto)
-=======
 	err := collection.FindOne(c, bson.M{"identificacao": id}).Decode(&produto)
->>>>>>> iana
 	return produto, err
 }
