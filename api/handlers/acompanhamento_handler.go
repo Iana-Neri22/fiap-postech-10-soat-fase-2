@@ -120,15 +120,15 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(p *gin.Context) {
 // @Success 200 {object} presenters.AcompanhamentoDTO
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
-	nroPedido := c.Param("nroPedido")
-	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(c, nroPedido)
+	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(c, "")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	acompanhamentoDTO := presenters.NewAcompanhamentoDTO(&acompanhamento)
-	c.JSON(http.StatusOK, acompanhamentoDTO)
+	// Use the presenter to format the response
+	acompanhamentoDto := presenters.NewAcompanhamentoDTO(&acompanhamento)
+	c.JSON(http.StatusOK, acompanhamentoDto)
 }
 
 // AtualizarStatusPedido godoc
@@ -171,4 +171,8 @@ func (ah *AcompanhamentoHandler) AtualizarStatusPedido(a *gin.Context) {
 	a.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Status atualizado com sucesso",
 	})
+}
+
+type StatusUpdateRequest struct {
+    Status string `json:"status" example:"Em preparação"`
 }

@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/acompanhamento/{nroPedido}": {
+        "/acompanhamento/show": {
             "get": {
                 "description": "Busca um acompanhamento",
                 "consumes": [
@@ -82,6 +82,44 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/presenters.AcompanhamentoDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/acompanhamento/{nroPedido}": {
+            "get": {
+                "description": "Busca um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Busca um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
                         }
                     },
                     "400": {
@@ -138,9 +176,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/acompanhamento/show": {
-            "get": {
-                "description": "Busca um acompanhamento",
+        "/acompanhamento/{nroPedido}/status": {
+            "put": {
+                "description": "Atualiza o status de um pedido",
                 "consumes": [
                     "application/json"
                 ],
@@ -150,12 +188,30 @@ const docTemplate = `{
                 "tags": [
                     "acompanhamento"
                 ],
-                "summary": "Busca um acompanhamento",
+                "summary": "Atualiza o status de um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Novo status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/presenters.AcompanhamentoDTO"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "400": {
@@ -406,7 +462,18 @@ const docTemplate = `{
     },
     "definitions": {
         "entities.AcompanhamentoPedido": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "pedidos": {
+                    "$ref": "#/definitions/entities.FilaPedidos"
+                },
+                "tempoEstimado": {
+                    "$ref": "#/definitions/time.Duration"
+                },
+                "ultimaAtualizacao": {
+                    "type": "string"
+                }
+            }
         },
         "entities.CatProduto": {
             "type": "string",
@@ -529,11 +596,14 @@ const docTemplate = `{
         "presenters.PedidoDTO": {
             "type": "object",
             "properties": {
+                "identificacao": {
+                    "type": "string"
+                },
                 "status": {
                     "$ref": "#/definitions/entities.StatusPedido"
                 },
                 "tempoEstimado": {
-                    "type": "string"
+                    "$ref": "#/definitions/time.Duration"
                 }
             }
         },
@@ -552,6 +622,61 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "time.Duration": {
+            "type": "integer",
+            "enum": [
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000,
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
+            ],
+            "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour",
+                "minDuration",
+                "maxDuration",
+                "Nanosecond",
+                "Microsecond",
+                "Millisecond",
+                "Second",
+                "Minute",
+                "Hour"
+            ]
         }
     }
 }`
@@ -566,8 +691,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "API para o Tech Challenge 2 da FIAP - SOAT",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {

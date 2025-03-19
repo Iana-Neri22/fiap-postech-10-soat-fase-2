@@ -10,6 +10,7 @@ import (
 const collectionCliente = "cliente"
 const collectionPagamento = "pagamento"
 const CollectionPedido = "pedido"
+const CollectionProduto = "produto"
 
 func Setup(env *bootstrap.Env, db mongo.Database, gin gin.IRouter) {
 	router := gin.Group("")
@@ -19,4 +20,5 @@ func Setup(env *bootstrap.Env, db mongo.Database, gin gin.IRouter) {
 	NewPagamentoRouter(env, db, router)
 	NewPedidoRouter(env, db, router)
 	NewAcompanhamentoRouter(env, db, router)
+	NewProdutoRouter(env, db, router)
 }

@@ -1,6 +1,13 @@
 basePath: /
 definitions:
   entities.AcompanhamentoPedido:
+    properties:
+      pedidos:
+        $ref: '#/definitions/entities.FilaPedidos'
+      tempoEstimado:
+        $ref: '#/definitions/time.Duration'
+      ultimaAtualizacao:
+        type: string
     type: object
   entities.CatProduto:
     enum:
@@ -85,10 +92,12 @@ definitions:
     type: object
   presenters.PedidoDTO:
     properties:
+      identificacao:
+        type: string
       status:
         $ref: '#/definitions/entities.StatusPedido'
       tempoEstimado:
-        type: string
+        $ref: '#/definitions/time.Duration'
     type: object
   response.ErrorResponse:
     properties:
@@ -100,6 +109,58 @@ definitions:
       message:
         type: string
     type: object
+  time.Duration:
+    enum:
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    type: integer
+    x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
 host: localhost:8080
 info:
   contact: {}
@@ -137,9 +198,9 @@ paths:
     get:
       consumes:
       - application/json
-      description: Busca um acompanhamento
+      description: Busca um pedido
       parameters:
-      - description: Número do pedido
+      - description: ID do pedido
         in: path
         name: nroPedido
         required: true
@@ -150,12 +211,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/presenters.AcompanhamentoDTO'
+            $ref: '#/definitions/entities.AcompanhamentoPedido'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Busca um acompanhamento
+      summary: Busca um pedido
       tags:
       - acompanhamento
     post:
@@ -188,23 +249,60 @@ paths:
       summary: Adiciona um pedido
       tags:
       - acompanhamento
-  /acompanhamento/show:
-    get:
+  /acompanhamento/{nroPedido}/status:
+    put:
       consumes:
       - application/json
-      description: Mostra a fila de pedidos
+      description: Atualiza o status de um pedido
+      parameters:
+      - description: ID do pedido
+        in: path
+        name: nroPedido
+        required: true
+        type: string
+      - description: Novo status
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entities.FilaPedidos'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Mostra a fila de pedidos
+      summary: Atualiza o status de um pedido
+      tags:
+      - acompanhamento
+  /acompanhamento/show:
+    get:
+      consumes:
+      - application/json
+      description: Busca um acompanhamento
+      parameters:
+      - description: Número do pedido
+        in: path
+        name: nroPedido
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenters.AcompanhamentoDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Busca um acompanhamento
       tags:
       - acompanhamento
   /cliente:

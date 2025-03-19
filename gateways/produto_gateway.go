@@ -28,11 +28,11 @@ func (pd *ProdutoGateway) AdicionarProduto(c context.Context, produto *entities.
 	return err
 }
 
-func (pd *ProdutoGateway) BuscarProdutoPorId(c context.Context, nome string) (*entities.Produto, error) {
+func (pd *ProdutoGateway) BuscarProdutoPorId(c context.Context, id string) (*entities.Produto, error) {
 	collection := pd.database.Collection(pd.collection)
 
 	var produto *entities.Produto
 
-	err := collection.FindOne(c, bson.M{"nome": nome}).Decode(&produto)
+	err := collection.FindOne(c, bson.M{"identificacao": id}).Decode(&produto)
 	return produto, err
 }
