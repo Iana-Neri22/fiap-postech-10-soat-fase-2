@@ -20,6 +20,7 @@ const (
 
 type Pedido struct {
 	Identificacao     uuid.UUID
+	Cliente           Cliente
 	Produtos          []Produto
 	Status            StatusPedido
 	TimeStamp         time.Time
@@ -27,7 +28,7 @@ type Pedido struct {
 	Total             decimal.Decimal
 }
 
-func PedidoNew(produtos []Produto) (*Pedido, error) {
+func PedidoNew(cliente Cliente, produtos []Produto) (*Pedido, error) {
 	id := uuid.New()
 
 	if len(produtos) == 0 {
@@ -52,6 +53,7 @@ func PedidoNew(produtos []Produto) (*Pedido, error) {
 
 	return &Pedido{
 		Identificacao:     id,
+		Cliente:           cliente,
 		Produtos:          produtos,
 		Status:            Pendente,
 		TimeStamp:         time.Now(),

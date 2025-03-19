@@ -10,8 +10,9 @@ type PedidoIncluirUseCase struct {
 	pedidoGateway repository.PedidoRepository
 }
 
-func (pduc *PedidoIncluirUseCase) Run(c context.Context, produtos []entities.Produto) (*entities.Pedido, error) {
-	pedido, err := entities.PedidoNew(produtos)
+func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto) (*entities.Pedido, error) {
+
+	pedido, err := entities.PedidoNew(cliente, produtos)
 	if err != nil {
 		return nil, err
 	}
