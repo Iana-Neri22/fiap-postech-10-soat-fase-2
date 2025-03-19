@@ -4,7 +4,7 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-	service "lanchonete/domain/services"
+	"lanchonete/domain/services"
 	"time"
 )
 

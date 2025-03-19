@@ -28,15 +28,18 @@ func NewAcompanhamentoDTO(acompanhamento *entities.AcompanhamentoPedido) Acompan
 			if tempoEstimado < 0 {
 				tempoEstimado = 0
 			}
+		} else if pedido.Status == entities.Recebido {
+			tempoEstimado = entities.DefaultPreparationTime
 		} else {
-			tempoEstimado = time.Duration(0)
+			tempoEstimado = 0
 		}
 		pedidosDTO[i] = PedidoDTO{
+			Identificacao: pedido.Identificacao,
 			Status:        pedido.Status,
 			TempoEstimado: tempoEstimado,
 		}
 	}
 	return AcompanhamentoDTO{
-	Pedidos: pedidosDTO,
-}
+		Pedidos: pedidosDTO,
+	}
 }
