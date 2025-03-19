@@ -17,4 +17,5 @@ func Setup(env *bootstrap.Env, db mongo.Database, gin gin.IRouter) {
 	NewDocRouter(router)
 	NewClienteRouter(env, db, router)
 	NewPagamentoRouter(env, db, router)
+	NewPedidoRouter(env, db, router)
 }
