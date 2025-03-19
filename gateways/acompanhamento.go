@@ -3,21 +3,21 @@ package gateways
 import (
 	"context"
 
-	"lanchonete/domain/repository"
 	"lanchonete/domain/entities"
+	"lanchonete/domain/repository"
 	"lanchonete/infra/database/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type acompanhamentoRepository struct {
-	database mongo.Database
+	database   mongo.Database
 	collection string
 }
 
 func NewAcompanhamentoRepository(db mongo.Database, collection string) repository.AcompanhamentoRepository {
 	return &acompanhamentoRepository{
-		database: db,
+		database:   db,
 		collection: collection,
 	}
 }
@@ -39,7 +39,7 @@ func (ar *acompanhamentoRepository) BuscarPedidos(c context.Context, nroPedido s
 }
 
 func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, p *entities.Pedido) error {
-	pedido, err := ar.BuscarPedidos(c, p.ID)
+	pedido, err := ar.BuscarPedidos(c, p.Identificacao)
 	if err != nil {
 		return err
 	}

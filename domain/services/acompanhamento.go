@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	CollectionPedido = "pedido"
+	CollectionAcompanhamento = "acompanhamento"
 )
 
 type AcompanhamentoUseCase interface {

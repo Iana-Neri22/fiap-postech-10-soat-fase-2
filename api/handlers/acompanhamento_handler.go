@@ -4,6 +4,7 @@ import (
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
 	"lanchonete/domain/services"
+	_"lanchonete/docs"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,16 @@ func NewAcompanhamentoHandler(auc service.AcompanhamentoUseCase) *Acompanhamento
 	}
 }
 
+// CriarAcompanhamento godoc
+// @Summary Cria um acompanhamento
+// @Description Cria um acompanhamento
+// @Tags acompanhamento
+// @Router /acompanhamento [post]
+// @Accept  json
+// @Produce  json
+// @Param acompanhamento body entities.AcompanhamentoPedido true "Acompanhamento"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) CriarAcompanhamento(a *gin.Context) {
 	var acompanhamento entities.AcompanhamentoPedido
 
@@ -35,10 +46,20 @@ func (ah *AcompanhamentoHandler) CriarAcompanhamento(a *gin.Context) {
 	}
 
 	a.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Cliente criado com sucesso",
+		Message: "Acompanhamento criado com sucesso",
 	})
 }
 
+// BuscarPedido godoc
+// @Summary Busca um pedido
+// @Description Busca um pedido
+// @Tags acompanhamento
+// @Router /acompanhamento/{nroPedido} [get]
+// @Accept  json
+// @Produce  json
+// @Param nroPedido path string true "ID do pedido"
+// @Success 200 {object} entities.AcompanhamentoPedido
+// @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 	ID := p.Param("ID")
 	pedido, err := ah.AcompanhamentoUseCase.BuscarPedido(p, ID)
@@ -50,6 +71,17 @@ func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 	p.JSON(http.StatusOK, pedido)
 }
 
+// AdicionarPedido godoc
+// @Summary Adiciona um pedido
+// @Description Adiciona um pedido
+// @Tags acompanhamento
+// @Router /acompanhamento/{nroPedido} [post]
+// @Accept  json
+// @Produce  json
+// @Param ID path string true "ID do pedido"
+// @Param acompanhamento body entities.AcompanhamentoPedido true "Acompanhamento"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) AdicionarPedido(p *gin.Context) {
 	ID := p.Param("ID")
 	pedido, err := ah.AcompanhamentoUseCase.BuscarPedido(p, ID)

@@ -2,49 +2,58 @@ package entities
 
 import (
 	"errors"
-	"strings"
 	"time"
-	"sync"
+
+	"github.com/shopspring/decimal"
 )
 
 type StatusPedido string
 
 const (
-	Pendente StatusPedido = "Pendente"
-	Recebido StatusPedido = "Recebido"
+	Pendente     StatusPedido = "Pendente"
+	Recebido     StatusPedido = "Recebido"
 	EmPreparacao StatusPedido = "Em preparação"
-	Pronto StatusPedido = "Pronto"
-	Finalizado StatusPedido = "Finalizado"
+	Pronto       StatusPedido = "Pronto"
+	Finalizado   StatusPedido = "Finalizado"
 )
 
 type Pedido struct {
-	ID  		string
-	Categoria 	string
-	Status   	StatusPedido
-	TimeStamp	time.Time
+	Identificacao     string
+	Produtos          []Produto
+	Status            StatusPedido
+	TimeStamp         time.Time
 	UltimaAtualizacao time.Time
-	mu *sync.Mutex
+	Total             decimal.Decimal
 }
 
-func PedidoNew(ID string, Categoria string, Status StatusPedido) (*Pedido, error) {
+func PedidoNew(identificacao string, produtos []Produto) (*Pedido, error) {
+	if identificacao == "" || len(produtos) == 0 {
+		return nil, errors.New("todos os campos são obrigatórios")
+	}
 
-	if  strings.TrimSpace(ID) == "" || strings.TrimSpace(Categoria) == "" || strings.TrimSpace(string(Status)) == "" {
-		return nil, errors.New("nenhum dos campos podem estar em branco")
+	var total decimal.Decimal
+	for _, produto := range produtos {
+		total = total.Add(produto.Preco)
 	}
 
 	return &Pedido{
-		ID:  ID,
-		Categoria: Categoria,
-		Status:   Status,
-		TimeStamp: time.Now(),
-		mu: &sync.Mutex{},
+		Identificacao:     identificacao,
+		Produtos:          produtos,
+		Status:            Pendente,
+		TimeStamp:         time.Now(),
+		UltimaAtualizacao: time.Now(),
+		Total:             total,
 	}, nil
 }
 
-func (a *Pedido) UpdateStatus(status StatusPedido) {
-	a.mu.Lock()
-	defer a.mu.Unlock()
+func (p *Pedido) UpdateStatus(status StatusPedido) error {
+	switch status {
+	case Recebido, EmPreparacao, Pronto, Finalizado:
+		p.Status = status
+	default:
+		return errors.New("status inválido")
+	}
+	p.UltimaAtualizacao = time.Now()
 
-	a.Status = status
-	a.UltimaAtualizacao = time.Now()
+	return nil
 }
