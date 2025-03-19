@@ -7,7 +7,7 @@ import (
 )
 
 type PedidoIncluirUseCase struct {
-	pedidoGateway repository.PedidoRepository
+	pedidoRepository repository.PedidoRepository
 }
 
 func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto) (*entities.Pedido, error) {
@@ -16,7 +16,8 @@ func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Client
 	if err != nil {
 		return nil, err
 	}
-	err = pduc.pedidoGateway.CriarPedido(c, pedido)
+	err = pduc.pedidoRepository.CriarPedido(c, pedido)
+
 	if err != nil {
 		return nil, err
 	}

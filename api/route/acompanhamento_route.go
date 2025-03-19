@@ -11,12 +11,13 @@ import (
 )
 
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	collection := "pedido"
-	ar := gateways.NewAcompanhamentoRepository(db, collection)
+	
+	ar := gateways.NewAcompanhamentoRepository(db, CollectionPedido)
 	auc := &handler.AcompanhamentoHandler{
 		AcompanhamentoUseCase: usecase.NewAcompanhamentoUseCase(ar),
 	}
 
 	router.POST("/acompanhamento", auc.CriarAcompanhamento)
 	router.GET("/acompanhamento/:nroPedido", auc.BuscarPedido)
+	router.POST("/acompanhamento/:nroPedido", auc.AdicionarPedido)
 }
