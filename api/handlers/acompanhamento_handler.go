@@ -4,6 +4,7 @@ import (
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
 	"lanchonete/domain/services"
+	"lanchonete/presenters"
 	_"lanchonete/docs"
 	"net/http"
 
@@ -106,4 +107,26 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(p *gin.Context) {
 	p.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pedido adicionado com sucesso",
 	})
+}
+
+// BuscarAcompanhamento godoc
+// @Summary Busca um acompanhamento
+// @Description Busca um acompanhamento
+// @Tags acompanhamento
+// @Router /acompanhamento/show [get]
+// @Accept  json
+// @Produce  json
+// @Param nroPedido path string true "Número do pedido"
+// @Success 200 {object} presenters.AcompanhamentoDTO
+// @Failure 400 {object} response.ErrorResponse
+func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
+    nroPedido := c.Param("nroPedido")
+    acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(c, nroPedido)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+        return
+    }
+
+	acompanhamentoDTO := presenters.NewAcompanhamentoDTO(&acompanhamento)
+    c.JSON(http.StatusOK, acompanhamentoDTO)
 }

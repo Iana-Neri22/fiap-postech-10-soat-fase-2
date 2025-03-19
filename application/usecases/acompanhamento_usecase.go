@@ -28,3 +28,7 @@ func (uc *acompanhamentoUseCase) BuscarPedido(c context.Context, nroPedido strin
 func (uc *acompanhamentoUseCase) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, pedido *entities.Pedido) error {
 	return uc.acompanhamentoRepo.AdicionarPedido(c, acompanhamento, pedido)
 }
+
+func (uc *acompanhamentoUseCase) BuscarAcompanhamento(c context.Context, nroPedido string) (entities.AcompanhamentoPedido, error) {
+    return uc.acompanhamentoRepo.BuscarAcompanhamento(c, nroPedido)
+}

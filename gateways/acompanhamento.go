@@ -46,3 +46,12 @@ func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanha
 	acompanhamento.Pedidos.Enfileirar(pedido)
 	return nil
 }
+
+func (ar *acompanhamentoRepository) BuscarAcompanhamento(c context.Context, nroPedido string) (entities.AcompanhamentoPedido, error) {
+	collection := ar.database.Collection(ar.collection)
+
+	var acompanhamento entities.AcompanhamentoPedido
+
+	err := collection.FindOne(c, bson.M{"nroPedido": nroPedido}).Decode(&acompanhamento)
+	return acompanhamento, err
+}

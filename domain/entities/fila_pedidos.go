@@ -6,7 +6,7 @@ import (
 
 type FilaPedidos struct {
 	pedidos []Pedido
-	mu      sync.Mutex
+	mu      *sync.Mutex
 }
 
 func NewFila() *FilaPedidos {
@@ -31,6 +31,10 @@ func (f *FilaPedidos) Desenfileirar() (Pedido, bool) {
 	pedido := f.pedidos[0]
 	f.pedidos = f.pedidos[1:]
 	return pedido, true
+}
+
+func (f *FilaPedidos) Listar() []Pedido {
+    return f.pedidos
 }
 
 func (f *FilaPedidos) Tamanho() int {
