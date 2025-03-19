@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"sort"
 	"sync"
 )
 
@@ -10,7 +11,10 @@ type FilaPedidos struct {
 }
 
 func NewFila() *FilaPedidos {
-	return &FilaPedidos{}
+	return &FilaPedidos{
+		pedidos: make([]Pedido, 0),
+		mu:      &sync.Mutex{},
+	}
 }
 
 func (f *FilaPedidos) Enfileirar(p Pedido) {
@@ -18,6 +22,10 @@ func (f *FilaPedidos) Enfileirar(p Pedido) {
 	defer f.mu.Unlock()
 
 	f.pedidos = append(f.pedidos, p)
+
+	sort.Slice(f.pedidos, func(i, j int) bool {
+		return f.pedidos[i].TimeStamp.Before(f.pedidos[j].TimeStamp)
+	})
 }
 
 func (f *FilaPedidos) Desenfileirar() (Pedido, bool) {
@@ -33,8 +41,27 @@ func (f *FilaPedidos) Desenfileirar() (Pedido, bool) {
 	return pedido, true
 }
 
+func (f *FilaPedidos) RemoverPedido(identificacao string) bool {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	for i, pedido := range f.pedidos {
+		if pedido.Identificacao == identificacao {
+			// Remove the pedido at position i
+			f.pedidos = append(f.pedidos[:i], f.pedidos[i+1:]...)
+			return true
+		}
+	}
+	return false
+}
+
 func (f *FilaPedidos) Listar() []Pedido {
-    return f.pedidos
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	result := make([]Pedido, len(f.pedidos))
+	copy(result, f.pedidos)
+	return result
 }
 
 func (f *FilaPedidos) Tamanho() int {

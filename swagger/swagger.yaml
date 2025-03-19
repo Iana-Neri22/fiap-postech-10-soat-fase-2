@@ -215,6 +215,37 @@ paths:
       summary: Adiciona um pedido
       tags:
       - acompanhamento
+  /acompanhamento/{nroPedido}/status:
+    put:
+      consumes:
+      - application/json
+      description: Atualiza o status de um pedido
+      parameters:
+      - description: ID do pedido
+        in: path
+        name: nroPedido
+        required: true
+        type: string
+      - description: Novo status
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Atualiza o status de um pedido
+      tags:
+      - acompanhamento
   /acompanhamento/show:
     get:
       consumes:

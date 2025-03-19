@@ -21,4 +21,5 @@ func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.
 	router.GET("/acompanhamento/:nroPedido", auc.BuscarPedido)
 	router.POST("/acompanhamento/:nroPedido", auc.AdicionarPedido)
 	router.GET("/acompanhamento/show", auc.BuscarAcompanhamento)
+	router.GET(("/acompanhamento/:nroPedido/status"), auc.AtualizarStatusPedido)
 }
