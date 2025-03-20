@@ -1,14 +1,19 @@
 basePath: /
 definitions:
   entities.AcompanhamentoPedido:
-    properties:
-      pedidos:
-        $ref: '#/definitions/entities.FilaPedidos'
-      tempoEstimado:
-        $ref: '#/definitions/time.Duration'
-      ultimaAtualizacao:
-        type: string
     type: object
+  entities.CatProduto:
+    enum:
+    - Lanche
+    - Acompanhamento
+    - Bebida
+    - Sobremesa
+    type: string
+    x-enum-varnames:
+    - Lanche
+    - Acompanhamento
+    - Bebida
+    - Sobremesa
   entities.Cliente:
     properties:
       cpf:
@@ -20,18 +25,48 @@ definitions:
     type: object
   entities.FilaPedidos:
     type: object
+  entities.Pagamento:
+    properties:
+      dataCriacao:
+        type: string
+      idPagamento:
+        type: string
+      status:
+        type: string
+      valor:
+        type: string
+    type: object
   entities.Pedido:
     properties:
-      categoria:
+      cliente:
+        $ref: '#/definitions/entities.Cliente'
+      identificacao:
         type: string
-      id:
-        type: string
+      produtos:
+        items:
+          $ref: '#/definitions/entities.Produto'
+        type: array
       status:
         $ref: '#/definitions/entities.StatusPedido'
       timeStamp:
         type: string
+      total:
+        type: number
       ultimaAtualizacao:
         type: string
+    type: object
+  entities.Produto:
+    properties:
+      categoria:
+        $ref: '#/definitions/entities.CatProduto'
+      descricao:
+        type: string
+      identificacao:
+        type: string
+      nome:
+        type: string
+      preco:
+        type: number
     type: object
   entities.StatusPedido:
     enum:
@@ -47,17 +82,6 @@ definitions:
     - EmPreparacao
     - Pronto
     - Finalizado
-  entities.Pagamento:
-    properties:
-      dataCriacao:
-        type: string
-      idPagamento:
-        type: string
-      status:
-        type: string
-      valor:
-        type: string
-    type: object
   response.ErrorResponse:
     properties:
       message:
@@ -68,26 +92,6 @@ definitions:
       message:
         type: string
     type: object
-  time.Duration:
-    enum:
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
-    type: integer
-    x-enum-varnames:
-    - minDuration
-    - maxDuration
-    - Nanosecond
-    - Microsecond
-    - Millisecond
-    - Second
-    - Minute
-    - Hour
 host: localhost:8080
 info:
   contact: {}
@@ -227,87 +231,6 @@ paths:
       summary: Busca um cliente
       tags:
       - cliente
-  /pedidos:
-    post:
-      consumes:
-      - application/json
-      description: Cria um pedido
-      parameters:
-      - description: Pedido
-        in: body
-        name: pedido
-        required: true
-        schema:
-          $ref: '#/definitions/entities.Pedido'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Cria um pedido
-      tags:
-      - pedido
-  /pedidos/{nroPedido}:
-    get:
-      consumes:
-      - application/json
-      description: Busca um pedido
-      parameters:
-      - description: Número do pedido
-        in: path
-        name: nroPedido
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entities.Pedido'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Busca um pedido
-      tags:
-      - pedido
-    post:
-      consumes:
-      - application/json
-      description: Adiciona um pedido
-      parameters:
-      - description: ID do pedido
-        in: path
-        name: ID
-        required: true
-        type: string
-      - description: Pedido
-        in: body
-        name: pedido
-        required: true
-        schema:
-          $ref: '#/definitions/entities.Pedido'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Adiciona um pedido
-      tags:
-      - pedido
   /pagamento:
     post:
       consumes:
@@ -360,4 +283,106 @@ paths:
       summary: Confirma o pagamento
       tags:
       - pagamento
+  /pedidos:
+    post:
+      consumes:
+      - application/json
+      description: Cria um pedido
+      parameters:
+      - description: Pedido
+        in: body
+        name: pedido
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pedido'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Cria um pedido
+      tags:
+      - pedido
+  /pedidos/{nroPedido}:
+    get:
+      consumes:
+      - application/json
+      description: Busca um pedido
+      parameters:
+      - description: Número do pedido
+        in: path
+        name: nroPedido
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Pedido'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Busca um pedido
+      tags:
+      - pedido
+  /produto:
+    post:
+      consumes:
+      - application/json
+      description: Cria um produto
+      parameters:
+      - description: Produto
+        in: body
+        name: cliente
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Produto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Cria um produto
+      tags:
+      - produto
+  /produto/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Busca um produto
+      parameters:
+      - description: id do produto
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Produto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Busca um produto
+      tags:
+      - produto
 swagger: "2.0"

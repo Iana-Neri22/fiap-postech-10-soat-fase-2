@@ -4,22 +4,34 @@ import (
 	"encoding/json"
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
-	"lanchonete/domain/responses"
-	"lanchonete/domain/services"
+	response "lanchonete/domain/responses"
+	"lanchonete/domain/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type PedidoHandler struct {
-	PedidoUseCase service.PedidoUseCase
+	//	PedidoUseCase        service.PedidoUseCase
+	PedidoIncluirUseCase     usecases.PedidoIncluirUseCase
+	PedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase
 }
 
-func NewPedidoHandler(pedidoUseCase service.PedidoUseCase) *PedidoHandler {
+func NewPedidoHandler( /*pedidoUseCase service.PedidoUseCase,*/ pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase) *PedidoHandler {
 	return &PedidoHandler{
-		PedidoUseCase: pedidoUseCase,
+		//		PedidoUseCase:        pedidoUseCase,
+		PedidoIncluirUseCase:     pedidoIncluirUseCase,
+		PedidoBuscarPorIdUseCase: pedidoBuscarPorIdUseCase,
 	}
 }
+
+// func NewPedidoHandler(pedidoUseCase service.PedidoUseCase) *PedidoHandler {
+// 	return &PedidoHandler{
+// 		PedidoUseCase:        pedidoUseCase,
+// 		PedidoIncluirUseCase: pedidoIncluirUseCase,
+// 	}
+// }
 
 // CriarPedido godoc
 // @Summary Cria um pedido
@@ -39,15 +51,24 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
-	err = h.PedidoUseCase.CriarPedido(r, &pedido)
+	var pedidoTeste *entities.Pedido
+	pedidoTeste, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
+	// err = h.PedidoUseCase.CriarPedido(r, ped)
+	// if err != nil {
+	// 	r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+	// 	return
+	// }
+
 	r.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pedido criado com sucesso",
 	})
+	id_pedido := &pedidoTeste.Identificacao
+	println(id_pedido)
 }
 
 // BuscarPedido godoc
@@ -62,7 +83,13 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
 	nroPedido := r.Param("nroPedido")
-	pedido, err := h.PedidoUseCase.BuscarPedido(r, nroPedido)
+	id, err := uuid.Parse(nroPedido)
+	println(nroPedido)
+	if err != nil {
+		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+	pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, id)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return

@@ -4,6 +4,8 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
+
+	"github.com/google/uuid"
 )
 
 type PedidoAtualizarStatusUseCase struct {
@@ -11,7 +13,12 @@ type PedidoAtualizarStatusUseCase struct {
 }
 
 func (pduc *PedidoAtualizarStatusUseCase) Run(c context.Context, identificacao string, status string) error {
-	pedido, err := pduc.pedidoGateway.BuscarPedido(c, identificacao)
+
+	id, err := uuid.Parse(identificacao)
+	if err != nil {
+		return err
+	}
+	pedido, err := pduc.pedidoGateway.BuscarPedido(c, id)
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,7 @@ package handler
 import (
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
-	"lanchonete/domain/responses"
+	response "lanchonete/domain/responses"
 	"lanchonete/domain/usecases"
 	"net/http"
 
@@ -15,6 +15,16 @@ type ProdutoHandler struct {
 	ProdutoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase
 }
 
+// CriarProduto godoc
+// @Summary Cria um produto
+// @Description Cria um produto
+// @Tags produto
+// @Router /produto [post]
+// @Accept  json
+// @Produce  json
+// @Param cliente body entities.Produto true "Produto"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
 func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
 	var produto entities.Produto
 
@@ -24,7 +34,7 @@ func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
 		return
 	}
 
-	prd, err := ph.ProdutoIncluirUseCase.Run(c, produto.Identificacao, produto.Nome, string(produto.Categoria), produto.Preco.String())
+	prd, err := ph.ProdutoIncluirUseCase.Run(c, produto.Identificacao, produto.Nome, string(produto.Categoria), produto.Descricao, produto.Preco)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
@@ -35,6 +45,16 @@ func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
 	})
 }
 
+// BuscarProduto godoc
+// @Summary Busca um produto
+// @Description Busca um produto
+// @Tags produto
+// @Router /produto/{id} [get]
+// @Accept  json
+// @Produce  json
+// @Param id path string true "id do produto"
+// @Success 200 {object} entities.Produto
+// @Failure 400 {object} response.ErrorResponse
 func (ph *ProdutoHandler) ProdutoBuscarPorId(c *gin.Context) {
 	id := c.Param("id")
 

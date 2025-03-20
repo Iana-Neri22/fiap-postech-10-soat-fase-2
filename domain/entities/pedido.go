@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-
-	"github.com/shopspring/decimal"
 )
 
 type StatusPedido string
@@ -26,7 +24,7 @@ type Pedido struct {
 	Status            StatusPedido
 	TimeStamp         time.Time
 	UltimaAtualizacao time.Time
-	Total             decimal.Decimal
+	Total             float32
 }
 
 func PedidoNew(cliente Cliente, produtos []Produto) (*Pedido, error) {
@@ -47,9 +45,9 @@ func PedidoNew(cliente Cliente, produtos []Produto) (*Pedido, error) {
 		return nil, errors.New("o pedido precisa ter ao menos um lanche")
 	}
 
-	var total decimal.Decimal
+	total := float32(0)
 	for _, produto := range produtos {
-		total = total.Add(produto.Preco)
+		total += produto.Preco
 	}
 
 	return &Pedido{

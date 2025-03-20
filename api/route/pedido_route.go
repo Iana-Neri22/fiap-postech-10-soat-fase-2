@@ -1,8 +1,10 @@
 package route
 
 import (
-	"lanchonete/api/handlers"
+	handler "lanchonete/api/handlers"
+	//	usecase "lanchonete/application/usecases"
 	"lanchonete/bootstrap"
+	"lanchonete/domain/usecases"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
 
@@ -13,7 +15,9 @@ func NewPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGr
 	collection := "pedido"
 	pr := gateways.NewPedidoGateway(db, collection)
 	puc := &handler.PedidoHandler{
-		PedidoUseCase: usecase.NewPedidoUseCase(pr),
+		//PedidoUseCase: usecase.NewPedidoUseCase(pr),
+		PedidoIncluirUseCase:     *usecases.NewPedidoIncluirUseCase(pr),
+		PedidoBuscarPorIdUseCase: *usecases.NewPedidoBuscarPorIdUseCase(pr),
 	}
 
 	router.POST("/pedidos", puc.CriarPedido)

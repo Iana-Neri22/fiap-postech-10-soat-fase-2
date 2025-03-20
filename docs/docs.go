@@ -216,84 +216,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/pedidos": {
-            "post": {
-                "description": "Cria um pedido",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "pedido"
-                ],
-                "summary": "Cria um pedido",
-                "parameters": [
-                    {
-                        "description": "Pedido",
-                        "name": "pedido",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.Pedido"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/pedidos/{nroPedido}": {
-            "get": {
-                "description": "Busca um pedido",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "pedido"
-                ],
-                "summary": "Busca um pedido",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Número do pedido",
-                        "name": "nroPedido",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/entities.Pedido"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/pagamento": {
             "post": {
                 "description": "Envia o pagamento para o webhook",
@@ -373,22 +295,182 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/pedidos": {
+            "post": {
+                "description": "Cria um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Cria um pedido",
+                "parameters": [
+                    {
+                        "description": "Pedido",
+                        "name": "pedido",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/{nroPedido}": {
+            "get": {
+                "description": "Busca um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Busca um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Número do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produto": {
+            "post": {
+                "description": "Cria um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Cria um produto",
+                "parameters": [
+                    {
+                        "description": "Produto",
+                        "name": "cliente",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Produto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produto/{id}": {
+            "get": {
+                "description": "Busca um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Busca um produto",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id do produto",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Produto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "entities.AcompanhamentoPedido": {
-            "type": "object",
-            "properties": {
-                "pedidos": {
-                    "$ref": "#/definitions/entities.FilaPedidos"
-                },
-                "tempoEstimado": {
-                    "$ref": "#/definitions/time.Duration"
-                },
-                "ultimaAtualizacao": {
-                    "type": "string"
-                }
-            }
+            "type": "object"
+        },
+        "entities.CatProduto": {
+            "type": "string",
+            "enum": [
+                "Lanche",
+                "Acompanhamento",
+                "Bebida",
+                "Sobremesa"
+            ],
+            "x-enum-varnames": [
+                "Lanche",
+                "Acompanhamento",
+                "Bebida",
+                "Sobremesa"
+            ]
         },
         "entities.Cliente": {
             "type": "object",
@@ -407,26 +489,6 @@ const docTemplate = `{
         "entities.FilaPedidos": {
             "type": "object"
         },
-        "entities.Pedido": {
-            "type": "object",
-            "properties": {
-                "categoria": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "status": {
-                    "$ref": "#/definitions/entities.StatusPedido"
-                },
-                "timeStamp": {
-                    "type": "string"
-                },
-                "ultimaAtualizacao": {
-                    "type": "string"
-                }
-            }
-        },
         "entities.Pagamento": {
             "type": "object",
             "properties": {
@@ -441,6 +503,55 @@ const docTemplate = `{
                 },
                 "valor": {
                     "type": "string"
+                }
+            }
+        },
+        "entities.Pedido": {
+            "type": "object",
+            "properties": {
+                "cliente": {
+                    "$ref": "#/definitions/entities.Cliente"
+                },
+                "identificacao": {
+                    "type": "string"
+                },
+                "produtos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Produto"
+                    }
+                },
+                "status": {
+                    "$ref": "#/definitions/entities.StatusPedido"
+                },
+                "timeStamp": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
+                },
+                "ultimaAtualizacao": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.Produto": {
+            "type": "object",
+            "properties": {
+                "categoria": {
+                    "$ref": "#/definitions/entities.CatProduto"
+                },
+                "descricao": {
+                    "type": "string"
+                },
+                "identificacao": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "preco": {
+                    "type": "number"
                 }
             }
         },
@@ -476,29 +587,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        },
-        "time.Duration": {
-            "type": "integer",
-            "enum": [
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000
-            ],
-            "x-enum-varnames": [
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour"
-            ]
         }
     }
 }`
@@ -513,6 +601,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "API para o Tech Challenge 2 da FIAP - SOAT",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

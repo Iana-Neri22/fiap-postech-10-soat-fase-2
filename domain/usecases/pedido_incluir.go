@@ -10,6 +10,12 @@ type PedidoIncluirUseCase struct {
 	pedidoRepository repository.PedidoRepository
 }
 
+func NewPedidoIncluirUseCase(pedidoRepository repository.PedidoRepository) *PedidoIncluirUseCase {
+	return &PedidoIncluirUseCase{
+		pedidoRepository: pedidoRepository,
+	}
+}
+
 func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto) (*entities.Pedido, error) {
 
 	pedido, err := entities.PedidoNew(cliente, produtos)

@@ -5,6 +5,8 @@ import (
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
 	"lanchonete/domain/usecases"
+
+	"github.com/google/uuid"
 )
 
 type pedidoUseCase struct {
@@ -21,7 +23,7 @@ func (puc *pedidoUseCase) CriarPedido(c context.Context, pedido *entities.Pedido
 	return puc.pedidoRepository.CriarPedido(c, pedido)
 }
 
-func (puc *pedidoUseCase) BuscarPedido(c context.Context, identificacao string) (entities.Pedido, error) {
+func (puc *pedidoUseCase) BuscarPedido(c context.Context, identificacao uuid.UUID) (*entities.Pedido, error) {
 	return puc.pedidoRepository.BuscarPedido(c, identificacao)
 }
 

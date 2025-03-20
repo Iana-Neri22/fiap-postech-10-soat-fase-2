@@ -6,6 +6,8 @@ import (
 			"lanchonete/domain/entities"
 			"lanchonete/domain/repository"
 
+
+
 			"github.com/shopspring/decimal"
 		)
 
@@ -32,9 +34,10 @@ import (
 
 			return produto, nil
 	*/
+
 	"lanchonete/domain/entities"
 )
 
 type ProdutoIncluirUseCase interface {
-	Run(c context.Context, identificacao string, nome string, categoria string, preco string) (*entities.Produto, error)
+	Run(c context.Context, identificacao string, nome string, categoria string, descricao string, preco float32) (*entities.Produto, error)
 }
