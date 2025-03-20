@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/shopspring/decimal"
 )
 
 type CatProduto string
@@ -19,11 +18,11 @@ type Produto struct {
 	Identificacao string
 	Nome          string
 	Categoria     CatProduto
-	Preco         decimal.Decimal
+	Preco         float32
 }
 
-func ProdutoNew(identificacao string, nome string, categoria string, preco decimal.Decimal) (*Produto, error) {
-	if strings.TrimSpace(identificacao) == "" || strings.TrimSpace(nome) == "" || strings.TrimSpace(preco.String()) == "" || strings.TrimSpace(categoria) == "" {
+func ProdutoNew(identificacao string, nome string, categoria string, preco float32) (*Produto, error) {
+	if strings.TrimSpace(identificacao) == "" || strings.TrimSpace(nome) == "" || strings.TrimSpace(categoria) == "" {
 		return nil, errors.New("todos os campos são obrigatórios")
 	}
 
@@ -36,16 +35,14 @@ func ProdutoNew(identificacao string, nome string, categoria string, preco decim
 		return nil, errors.New("categoria inválida")
 	}
 
-	decimal, err := decimal.NewFromString(preco.String())
-
-	if err != nil {
-		return nil, errors.New("preço deve ser um número válido")
-	}
+	// if err != nil {
+	// 	return nil, errors.New("preço deve ser um número válido")
+	// }
 
 	return &Produto{
 		Identificacao: identificacao,
 		Nome:          nome,
 		Categoria:     cat_prod,
-		Preco:         decimal,
+		Preco:         preco,
 	}, nil
 }

@@ -25,7 +25,7 @@ func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
 	}
 
 
-	prd, err := ph.ProdutoIncluirUseCase.Run(c, produto.Identificacao, produto.Nome, string(produto.Categoria), produto.Preco.String())
+	prd, err := ph.ProdutoIncluirUseCase.Run(c, produto.Identificacao, produto.Nome, string(produto.Categoria), produto.Preco)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return

@@ -53,6 +53,7 @@ definitions:
         $ref: '#/definitions/entities.StatusPedido'
       timeStamp:
         type: string
+        format: date-time
       total:
         type: number
       ultimaAtualizacao:

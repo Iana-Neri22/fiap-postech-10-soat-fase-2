@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/shopspring/decimal"
 )
 
 type StatusPedido string
@@ -18,12 +17,13 @@ const (
 )
 
 type Pedido struct {
-	Identificacao     string
-	Produtos          []Produto
-	Status            StatusPedido
-	TimeStamp         time.Time
-	UltimaAtualizacao time.Time
-	Total             decimal.Decimal
+	CPF				  string			`json:"cpf"`	
+	Identificacao     string			`json:"identificacao"`
+	Produtos          []Produto			`json:"produtos"`
+	Status            StatusPedido		`json:"status"`
+	TimeStamp         time.Time			`json:"timeStamp" format:"date-time"`
+	UltimaAtualizacao time.Time			`json:"ultimaAtualizacao" format:"date-time"`
+	Total             float32			`json:"total"`
 }
 
 func PedidoNew(identificacao string, produtos []Produto) (*Pedido, error) {
@@ -31,9 +31,9 @@ func PedidoNew(identificacao string, produtos []Produto) (*Pedido, error) {
 		return nil, errors.New("todos os campos são obrigatórios")
 	}
 
-	var total decimal.Decimal
+	var total float32
 	for _, produto := range produtos {
-		total = total.Add(produto.Preco)
+		total += produto.Preco
 	}
 
 	return &Pedido{

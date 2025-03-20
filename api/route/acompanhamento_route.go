@@ -12,7 +12,7 @@ import (
 
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	
-	ar := gateways.NewAcompanhamentoRepository(db, CollectionPedido)
+	ar := gateways.NewAcompanhamentoRepository(db, CollectionAcompanhamento)
 	auc := &handler.AcompanhamentoHandler{
 		AcompanhamentoUseCase: usecase.NewAcompanhamentoUseCase(ar),
 	}

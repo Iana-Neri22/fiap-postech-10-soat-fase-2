@@ -23,9 +23,12 @@ func NewPedidoGateway(db mongo.Database, collection string) repository.PedidoRep
 
 func (pg *PedidoGateway) CriarPedido(c context.Context, pedido *entities.Pedido) error {
 	collection := pg.database.Collection(pg.collection)
-	_, err := collection.InsertOne(c, pedido)
 
-	return err
+	_, err := collection.InsertOne(c, pedido)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao string) (entities.Pedido, error) {

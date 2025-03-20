@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/responses"
@@ -32,6 +33,7 @@ func NewAcompanhamentoHandler(auc service.AcompanhamentoUseCase) *Acompanhamento
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) CriarAcompanhamento(a *gin.Context) {
+	fmt.Print(a)
 	var acompanhamento entities.AcompanhamentoPedido
 
 	err := a.ShouldBind(&acompanhamento)
@@ -63,6 +65,7 @@ func (ah *AcompanhamentoHandler) CriarAcompanhamento(a *gin.Context) {
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 	nroPedido := p.Param("ID")
+	fmt.Print(p.Params)
 	pedido, err := ah.AcompanhamentoUseCase.BuscarPedido(p, nroPedido)
 	if err != nil {
 		p.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})

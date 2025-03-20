@@ -6,5 +6,5 @@ import (
 )
 
 type ProdutoIncluirUseCase interface {
-	Run(c context.Context, identificacao string, nome string, categoria string, preco string) (*entities.Produto, error)
+	Run(c context.Context, identificacao string, nome string, categoria string, preco float32) (*entities.Produto, error)
 }
