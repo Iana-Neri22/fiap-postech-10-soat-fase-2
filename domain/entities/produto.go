@@ -37,11 +37,6 @@ func ProdutoNew(identificacao string, nome string, categoria string, preco decim
 		return nil, errors.New("categoria inválida")
 	}
 
-	decimal, err := decimal.NewFromString(preco.String())
-
-	if err != nil {
-		return nil, errors.New("preço deve ser um número válido")
-	}
 
 	return &Produto{
 		Identificacao: identificacao,

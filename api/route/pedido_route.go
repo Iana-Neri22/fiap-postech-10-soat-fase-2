@@ -5,7 +5,6 @@ import (
 	"lanchonete/bootstrap"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
-	"lanchonete/application/usecases"
 
 	"github.com/gin-gonic/gin"
 )
