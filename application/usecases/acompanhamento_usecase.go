@@ -4,7 +4,7 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-	"lanchonete/domain/services"
+	service "lanchonete/domain/services"
 	"time"
 )
 
@@ -22,22 +22,16 @@ func (uc *acompanhamentoUseCase) CriarAcompanhamento(c context.Context, acompanh
 	return uc.acompanhamentoRepo.CriarAcompanhamento(c, acompanhamento)
 }
 
-func (uc *acompanhamentoUseCase) BuscarPedido(c context.Context, nroPedido string) (entities.Pedido, error) {
-	return uc.acompanhamentoRepo.BuscarPedidos(c, nroPedido)
+func (uc *acompanhamentoUseCase) BuscarPedido(c context.Context, ID string) (entities.Pedido, error) {
+	return uc.acompanhamentoRepo.BuscarPedidos(c, ID)
+}
+func (uc *acompanhamentoUseCase) AdicionarPedido(c context.Context, acompanhamentoID string, pedido *entities.Pedido) error {
+	acompanhamento := &entities.AcompanhamentoPedido{ID: acompanhamentoID}
+	return uc.acompanhamentoRepo.AdicionarPedido(c, acompanhamento, pedido)
 }
 
-func (uc *acompanhamentoUseCase) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, pedido *entities.Pedido) error {
-	if pedido.Status == entities.Recebido {
-		acompanhamento.Pedidos.Enfileirar(*pedido)
-		acompanhamento.UltimaAtualizacao = time.Now()
-
-		return uc.acompanhamentoRepo.AdicionarPedido(c, acompanhamento, pedido)
-	}
-	return nil
-}
-
-func (uc *acompanhamentoUseCase) BuscarAcompanhamento(c context.Context, nroPedido string) (entities.AcompanhamentoPedido, error) {
-	return uc.acompanhamentoRepo.BuscarAcompanhamento(c, nroPedido)
+func (uc *acompanhamentoUseCase) BuscarAcompanhamento(c context.Context, ID string) (entities.AcompanhamentoPedido, error) {
+	return uc.acompanhamentoRepo.BuscarAcompanhamento(c, ID)
 }
 
 func (uc *acompanhamentoUseCase) AtualizarStatusPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, identificacao string, novoStatus entities.StatusPedido) error {

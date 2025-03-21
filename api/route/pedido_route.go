@@ -18,5 +18,5 @@ func NewPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGr
 	}
 
 	router.POST("/pedidos", puc.CriarPedido)
-	router.GET("/pedidos/:nroPedido", puc.BuscarPedido)
+	router.GET("/pedidos/:ID", puc.BuscarPedido)
 }

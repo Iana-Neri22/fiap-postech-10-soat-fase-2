@@ -69,6 +69,10 @@ type mongoCursor struct {
 	mc *mongo.Cursor
 }
 
+// func (mc *mongoClient) ListCollections(ctx context.Context, filter interface{}) ([]string, error) {
+// 	return mc.cl.ListDatabaseNames(ctx, filter)
+// }
+
 type mongoSession struct {
 	mongo.Session
 }

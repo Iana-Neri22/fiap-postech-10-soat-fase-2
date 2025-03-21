@@ -7,5 +7,5 @@ import (
 
 type PedidoUseCase interface {
 	CriarPedido(c context.Context, pedido *entities.Pedido) error
-	BuscarPedido(c context.Context, nroPedido string) (entities.Pedido, error)
+	BuscarPedido(c context.Context, ID string) (entities.Pedido, error)
 }

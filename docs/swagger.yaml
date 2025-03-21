@@ -2,6 +2,8 @@ basePath: /
 definitions:
   entities.AcompanhamentoPedido:
     properties:
+      id:
+        type: string
       pedidos:
         $ref: '#/definitions/entities.FilaPedidos'
       tempoEstimado:
@@ -43,6 +45,8 @@ definitions:
     type: object
   entities.Pedido:
     properties:
+      cpf:
+        type: string
       identificacao:
         type: string
       produtos:
@@ -52,11 +56,12 @@ definitions:
       status:
         $ref: '#/definitions/entities.StatusPedido'
       timeStamp:
-        type: string
         format: date-time
+        type: string
       total:
         type: number
       ultimaAtualizacao:
+        format: date-time
         type: string
     type: object
   entities.Produto:
@@ -93,6 +98,8 @@ definitions:
     type: object
   presenters.PedidoDTO:
     properties:
+      id:
+        type: string
       identificacao:
         type: string
       status:
@@ -112,48 +119,9 @@ definitions:
     type: object
   time.Duration:
     enum:
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
-    - -9223372036854775808
-    - 9223372036854775807
-    - 1
-    - 1000
-    - 1000000
-    - 1000000000
-    - 60000000000
-    - 3600000000000
+    - 900
     type: integer
     x-enum-varnames:
-    - minDuration
-    - maxDuration
-    - Nanosecond
-    - Microsecond
-    - Millisecond
-    - Second
-    - Minute
-    - Hour
-    - minDuration
-    - maxDuration
-    - Nanosecond
-    - Microsecond
-    - Millisecond
-    - Second
-    - Minute
-    - Hour
     - minDuration
     - maxDuration
     - Nanosecond
@@ -195,7 +163,7 @@ paths:
       summary: Cria um acompanhamento
       tags:
       - acompanhamento
-  /acompanhamento/{nroPedido}:
+  /acompanhamento/{ID}:
     get:
       consumes:
       - application/json
@@ -203,7 +171,7 @@ paths:
       parameters:
       - description: ID do pedido
         in: path
-        name: nroPedido
+        name: ID
         required: true
         type: string
       produces:
@@ -220,37 +188,7 @@ paths:
       summary: Busca um pedido
       tags:
       - acompanhamento
-    post:
-      consumes:
-      - application/json
-      description: Adiciona um pedido
-      parameters:
-      - description: ID do pedido
-        in: path
-        name: ID
-        required: true
-        type: string
-      - description: Acompanhamento
-        in: body
-        name: acompanhamento
-        required: true
-        schema:
-          $ref: '#/definitions/entities.AcompanhamentoPedido'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Adiciona um pedido
-      tags:
-      - acompanhamento
-  /acompanhamento/{nroPedido}/status:
+  /acompanhamento/{ID}/status:
     put:
       consumes:
       - application/json
@@ -258,7 +196,7 @@ paths:
       parameters:
       - description: ID do pedido
         in: path
-        name: nroPedido
+        name: ID
         required: true
         type: string
       - description: Novo status
@@ -281,6 +219,44 @@ paths:
       summary: Atualiza o status de um pedido
       tags:
       - acompanhamento
+  /acompanhamento/{IDAcompanhamento}/{IDPedido}:
+    post:
+      consumes:
+      - application/json
+      description: Adiciona um pedido existente ao acompanhamento de pedidos
+      parameters:
+      - description: ID do acompanhamento
+        in: path
+        name: IDAcompanhamento
+        required: true
+        type: string
+      - description: ID do pedido
+        in: path
+        name: IDPedido
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Pedido ou acompanhamento não encontrado
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Adiciona um pedido ao acompanhamento
+      tags:
+      - acompanhamento
   /acompanhamento/show:
     get:
       consumes:
@@ -289,7 +265,7 @@ paths:
       parameters:
       - description: Número do pedido
         in: path
-        name: nroPedido
+        name: ID
         required: true
         type: string
       produces:
@@ -435,7 +411,7 @@ paths:
       summary: Cria um pedido
       tags:
       - pedido
-  /pedidos/{nroPedido}:
+  /pedidos/{ID}:
     get:
       consumes:
       - application/json
@@ -443,7 +419,7 @@ paths:
       parameters:
       - description: Número do pedido
         in: path
-        name: nroPedido
+        name: ID
         required: true
         type: string
       produces:

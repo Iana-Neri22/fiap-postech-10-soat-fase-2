@@ -6,49 +6,59 @@ import (
 )
 
 type FilaPedidos struct {
-	pedidos []Pedido
-	mu      *sync.Mutex
+	Pedidos []Pedido    `bson:"pedidos" json:"pedidos"`
+	mu      *sync.Mutex `bson:"-" json:"-"` // "-" means this field won't be serialized
 }
 
-func NewFila() *FilaPedidos {
-	return &FilaPedidos{
-		pedidos: make([]Pedido, 0),
+func NewFilaPedidos() FilaPedidos {
+	return FilaPedidos{
+		Pedidos: make([]Pedido, 0),
 		mu:      &sync.Mutex{},
 	}
 }
 
+// EnsureMutex ensures the mutex is initialized
+func (f *FilaPedidos) EnsureMutex() {
+	if f.mu == nil {
+		f.mu = &sync.Mutex{}
+	}
+}
+
 func (f *FilaPedidos) Enfileirar(p Pedido) {
+	f.EnsureMutex()
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	f.pedidos = append(f.pedidos, p)
+	f.Pedidos = append(f.Pedidos, p)
 
-	sort.Slice(f.pedidos, func(i, j int) bool {
-		return f.pedidos[i].TimeStamp.Before(f.pedidos[j].TimeStamp)
+	sort.Slice(f.Pedidos, func(i, j int) bool {
+		return f.Pedidos[i].TimeStamp.Before(f.Pedidos[j].TimeStamp)
 	})
 }
 
 func (f *FilaPedidos) Desenfileirar() (Pedido, bool) {
+	f.EnsureMutex()
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	if len(f.pedidos) == 0 {
+	if len(f.Pedidos) == 0 {
 		return Pedido{}, false
 	}
 
-	pedido := f.pedidos[0]
-	f.pedidos = f.pedidos[1:]
+	pedido := f.Pedidos[0]
+	f.Pedidos = f.Pedidos[1:]
 	return pedido, true
 }
 
 func (f *FilaPedidos) RemoverPedido(identificacao string) bool {
+	f.EnsureMutex()
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	for i, pedido := range f.pedidos {
+	for i, pedido := range f.Pedidos {
 		if pedido.Identificacao == identificacao {
 			// Remove the pedido at position i
-			f.pedidos = append(f.pedidos[:i], f.pedidos[i+1:]...)
+			f.Pedidos = append(f.Pedidos[:i], f.Pedidos[i+1:]...)
 			return true
 		}
 	}
@@ -56,17 +66,26 @@ func (f *FilaPedidos) RemoverPedido(identificacao string) bool {
 }
 
 func (f *FilaPedidos) Listar() []Pedido {
+	f.EnsureMutex()
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	result := make([]Pedido, len(f.pedidos))
-	copy(result, f.pedidos)
+	result := make([]Pedido, len(f.Pedidos))
+	copy(result, f.Pedidos)
 	return result
 }
 
 func (f *FilaPedidos) Tamanho() int {
+	f.EnsureMutex()
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	return len(f.pedidos)
+	return len(f.Pedidos)
+}
+
+func (f *FilaPedidos) IsEmpty() bool {
+	f.EnsureMutex()
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return len(f.Pedidos) == 0
 }

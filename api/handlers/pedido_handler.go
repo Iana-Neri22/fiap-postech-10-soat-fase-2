@@ -2,10 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	_"lanchonete/docs"
+	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
-	"lanchonete/domain/responses"
-	"lanchonete/domain/services"
+	response "lanchonete/domain/responses"
+	service "lanchonete/domain/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -54,15 +54,15 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 // @Summary Busca um pedido
 // @Description Busca um pedido
 // @Tags pedido
-// @Router /pedidos/{nroPedido} [get]
+// @Router /pedidos/{ID} [get]
 // @Accept  json
 // @Produce  json
-// @Param nroPedido path string true "Número do pedido"
+// @Param ID path string true "Número do pedido"
 // @Success 200 {object} entities.Pedido
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
-	nroPedido := r.Param("nroPedido")
-	pedido, err := h.PedidoUseCase.BuscarPedido(r, nroPedido)
+	ID := r.Param("ID")
+	pedido, err := h.PedidoUseCase.BuscarPedido(r, ID)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return

@@ -2,9 +2,10 @@ package gateways
 
 import (
 	"context"
+	"fmt"
 
-	"lanchonete/domain/repository"
 	"lanchonete/domain/entities"
+	"lanchonete/domain/repository"
 	"lanchonete/infra/database/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,6 +25,7 @@ func NewClienteRepository(db mongo.Database, collection string) repository.Clien
 
 func (cr *clienteRepository) CriarCliente(c context.Context, cliente *entities.Cliente) error {
 	collection := cr.database.Collection(cr.collection)
+	fmt.Println("COLLECTION", collection)
 	_, err := collection.InsertOne(c, cliente)
 
 	return err

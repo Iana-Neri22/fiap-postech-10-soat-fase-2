@@ -72,7 +72,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Número do pedido",
-                        "name": "nroPedido",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     }
@@ -93,7 +93,64 @@ const docTemplate = `{
                 }
             }
         },
-        "/acompanhamento/{nroPedido}": {
+        "/acompanhamento/{IDAcompanhamento}/{IDPedido}": {
+            "post": {
+                "description": "Adiciona um pedido existente ao acompanhamento de pedidos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Adiciona um pedido ao acompanhamento",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do acompanhamento",
+                        "name": "IDAcompanhamento",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "IDPedido",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Pedido ou acompanhamento não encontrado",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/acompanhamento/{ID}": {
             "get": {
                 "description": "Busca um pedido",
                 "consumes": [
@@ -110,61 +167,16 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "ID do pedido",
-                        "name": "nroPedido",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Adiciona um pedido",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "acompanhamento"
-                ],
-                "summary": "Adiciona um pedido",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID do pedido",
                         "name": "ID",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "description": "Acompanhamento",
-                        "name": "acompanhamento",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
-                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/entities.AcompanhamentoPedido"
                         }
                     },
                     "400": {
@@ -176,7 +188,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/acompanhamento/{nroPedido}/status": {
+        "/acompanhamento/{ID}/status": {
             "put": {
                 "description": "Atualiza o status de um pedido",
                 "consumes": [
@@ -193,7 +205,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "ID do pedido",
-                        "name": "nroPedido",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -421,7 +433,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/pedidos/{nroPedido}": {
+        "/pedidos/{ID}": {
             "get": {
                 "description": "Busca um pedido",
                 "consumes": [
@@ -438,7 +450,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Número do pedido",
-                        "name": "nroPedido",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     }
@@ -464,6 +476,9 @@ const docTemplate = `{
         "entities.AcompanhamentoPedido": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "pedidos": {
                     "$ref": "#/definitions/entities.FilaPedidos"
                 },
@@ -525,6 +540,9 @@ const docTemplate = `{
         "entities.Pedido": {
             "type": "object",
             "properties": {
+                "cpf": {
+                    "type": "string"
+                },
                 "identificacao": {
                     "type": "string"
                 },
@@ -538,13 +556,15 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.StatusPedido"
                 },
                 "timeStamp": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "total": {
                     "type": "number"
                 },
                 "ultimaAtualizacao": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         },
@@ -596,6 +616,9 @@ const docTemplate = `{
         "presenters.PedidoDTO": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "identificacao": {
                     "type": "string"
                 },
@@ -626,48 +649,9 @@ const docTemplate = `{
         "time.Duration": {
             "type": "integer",
             "enum": [
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000,
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000
+                900
             ],
             "x-enum-varnames": [
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour",
-                "minDuration",
-                "maxDuration",
-                "Nanosecond",
-                "Microsecond",
-                "Millisecond",
-                "Second",
-                "Minute",
-                "Hour",
                 "minDuration",
                 "maxDuration",
                 "Nanosecond",

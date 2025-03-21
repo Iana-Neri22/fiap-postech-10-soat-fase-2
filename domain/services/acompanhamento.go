@@ -10,9 +10,9 @@ const (
 )
 
 type AcompanhamentoUseCase interface {
-	CriarAcompanhamento(C context.Context, acompanhamento *entities.AcompanhamentoPedido) error
-	BuscarPedido(C context.Context, nroPedido string) (entities.Pedido, error)
-	AdicionarPedido(C context.Context, acompanhamento *entities.AcompanhamentoPedido, pedido *entities.Pedido) error
-	BuscarAcompanhamento(C context.Context, nroPedido string) (entities.AcompanhamentoPedido, error)
-	AtualizarStatusPedido(C context.Context, acompanhamento *entities.AcompanhamentoPedido, identificacao string, novoStatus entities.StatusPedido) error
+	CriarAcompanhamento(c context.Context, acompanhamento *entities.AcompanhamentoPedido) error
+	BuscarPedido(c context.Context, nroPedido string) (entities.Pedido, error)
+	AdicionarPedido(c context.Context, acompanhamentoID string, pedido *entities.Pedido) error
+	BuscarAcompanhamento(c context.Context, nroPedido string) (entities.AcompanhamentoPedido, error)
+	AtualizarStatusPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, identificacao string, novoStatus entities.StatusPedido) error
 }

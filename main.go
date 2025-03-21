@@ -4,6 +4,7 @@ import (
 	route "lanchonete/api/route"
 	"lanchonete/bootstrap"
 	_"lanchonete/docs"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +16,16 @@ import (
 // @BasePath /
 //go:generate go run github.com/swaggo/swag/cmd/swag@latest init
 func main() {
+	ginEngine := gin.Default()
+
+	// Configurar CORS para aceitar todas as origens
+	ginEngine.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	app := bootstrap.App()
 
@@ -22,8 +33,6 @@ func main() {
 
 	db := app.Mongo.Database(env.DBName)
 	defer app.CloseDBConnection()
-
-	ginEngine := gin.Default()
 
 	route.Setup(env, db, ginEngine)
 
