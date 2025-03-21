@@ -6,7 +6,6 @@ import (
 	"lanchonete/bootstrap"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
@@ -15,7 +14,7 @@ import (
 
 func NewPagamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 
-	redisAddress := os.Getenv("REDIS_ADDRESS")
+	redisAddress := env.RedisAddress
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
 		Password: "", // no password set
