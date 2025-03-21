@@ -4,8 +4,6 @@ import (
 	"context"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-
-	"github.com/google/uuid"
 )
 
 type PedidoBuscarPorIdUseCase struct {
@@ -18,7 +16,7 @@ func NewPedidoBuscarPorIdUseCase(pedidoRepository repository.PedidoRepository) *
 	}
 }
 
-func (pduc *PedidoBuscarPorIdUseCase) Run(c context.Context, identificacao uuid.UUID) (*entities.Pedido, error) {
+func (pduc *PedidoBuscarPorIdUseCase) Run(c context.Context, identificacao string) (*entities.Pedido, error) {
 
 	pedido, err := pduc.pedidoRepository.BuscarPedido(c, identificacao)
 	if err != nil {

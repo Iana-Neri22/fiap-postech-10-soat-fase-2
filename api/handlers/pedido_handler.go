@@ -9,20 +9,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type PedidoHandler struct {
-	//	PedidoUseCase        service.PedidoUseCase
-	PedidoIncluirUseCase     usecases.PedidoIncluirUseCase
-	PedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase
+	PedidoIncluirUseCase         usecases.PedidoIncluirUseCase
+	PedidoBuscarPorIdUseCase     usecases.PedidoBuscarPorIdUseCase
+	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
 }
 
-func NewPedidoHandler( /*pedidoUseCase service.PedidoUseCase,*/ pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase) *PedidoHandler {
+func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase, pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase) *PedidoHandler {
 	return &PedidoHandler{
-		//		PedidoUseCase:        pedidoUseCase,
-		PedidoIncluirUseCase:     pedidoIncluirUseCase,
-		PedidoBuscarPorIdUseCase: pedidoBuscarPorIdUseCase,
+		PedidoIncluirUseCase:         pedidoIncluirUseCase,
+		PedidoBuscarPorIdUseCase:     pedidoBuscarPorIdUseCase,
+		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
 	}
 }
 
@@ -51,8 +50,7 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
-	var pedidoTeste *entities.Pedido
-	pedidoTeste, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos)
+	_, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
@@ -67,15 +65,13 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 	r.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pedido criado com sucesso",
 	})
-	id_pedido := &pedidoTeste.Identificacao
-	println(id_pedido)
 }
 
 // BuscarPedido godoc
 // @Summary Busca um pedido
 // @Description Busca um pedido
 // @Tags pedido
-// @Router /pedidos/{nroPedido} [get]
+// @Router /pedidos/{nroPedido} [GET]
 // @Accept  json
 // @Produce  json
 // @Param nroPedido path string true "Número do pedido"
@@ -83,13 +79,7 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
 	nroPedido := r.Param("nroPedido")
-	id, err := uuid.Parse(nroPedido)
-	println(nroPedido)
-	if err != nil {
-		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
-		return
-	}
-	pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, id)
+	pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, nroPedido)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
@@ -97,4 +87,29 @@ func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
 
 	r.JSON(http.StatusOK, pedido)
 
+}
+
+// BuscarPedido godoc
+// @Summary Atualiza um pedido a partir de sua Identificação
+// @Description Atualizar um pedido
+// @Tags pedido
+// @Router /pedidos/{nroPedido}/status/{status} [put]
+// @Accept  json
+// @Produce  json
+// @Param nroPedido path string true "Número do pedido"
+// @Param status path string true "Novo Status do pedido"
+// @Success 200 {object} entities.Pedido
+// @Failure 400 {object} response.ErrorResponse
+func (h *PedidoHandler) AtualizarStatusPedido(r *gin.Context) {
+	nroPedido := r.Param("nroPedido")
+	status := r.Param("status")
+	err := h.PedidoAtualizarStatusUseCase.Run(r, nroPedido, status)
+	if err != nil {
+		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	r.JSON(http.StatusOK, response.SuccessResponse{
+		Message: "Status do pedido atualizado com sucesso",
+	})
 }

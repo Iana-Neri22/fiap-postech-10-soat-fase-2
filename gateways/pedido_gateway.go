@@ -6,7 +6,6 @@ import (
 	"lanchonete/domain/repository"
 	"lanchonete/infra/database/mongo"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -29,7 +28,7 @@ func (pg *PedidoGateway) CriarPedido(c context.Context, pedido *entities.Pedido)
 	return err
 }
 
-func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao uuid.UUID) (*entities.Pedido, error) {
+func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao string) (*entities.Pedido, error) {
 	collection := pg.database.Collection(pg.collection)
 
 	var pedido entities.Pedido

@@ -334,6 +334,36 @@ paths:
       summary: Busca um pedido
       tags:
       - pedido
+  /pedidos/{nroPedido}/status/{status}:
+    put:
+      consumes:
+      - application/json
+      description: Atualizar um pedido
+      parameters:
+      - description: Número do pedido
+        in: path
+        name: nroPedido
+        required: true
+        type: string
+      - description: Novo Status do pedido
+        in: path
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Pedido'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Atualiza um pedido a partir de sua Identificação
+      tags:
+      - pedido
   /produto:
     post:
       consumes:

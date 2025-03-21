@@ -374,6 +374,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/pedidos/{nroPedido}/status/{status}": {
+            "put": {
+                "description": "Atualizar um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Atualiza um pedido a partir de sua Identificação",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Número do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Novo Status do pedido",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/produto": {
             "post": {
                 "description": "Cria um produto",

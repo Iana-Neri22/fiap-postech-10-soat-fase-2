@@ -18,18 +18,19 @@ const (
 )
 
 type Pedido struct {
-	Identificacao     uuid.UUID
+	Identificacao     string
 	Cliente           Cliente
 	Produtos          []Produto
+	Personalizacao    string
 	Status            StatusPedido
-	TimeStamp         time.Time
-	UltimaAtualizacao time.Time
+	TimeStamp         string
+	UltimaAtualizacao string
 	Total             float32
 }
 
-func PedidoNew(cliente Cliente, produtos []Produto) (*Pedido, error) {
+func PedidoNew(cliente Cliente, produtos []Produto, personalizacao string) (*Pedido, error) {
 	id := uuid.New()
-
+	id_string := id.String()
 	if len(produtos) == 0 {
 		return nil, errors.New("o pedido precisa ter ao menos um produto")
 	}
@@ -50,13 +51,20 @@ func PedidoNew(cliente Cliente, produtos []Produto) (*Pedido, error) {
 		total += produto.Preco
 	}
 
+	local, err := time.LoadLocation("America/Sao_Paulo")
+	if err != nil {
+		return nil, errors.New("erro ao carregar localização")
+	}
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
+
 	return &Pedido{
-		Identificacao:     id,
+		Identificacao:     id_string,
 		Cliente:           cliente,
 		Produtos:          produtos,
+		Personalizacao:    personalizacao,
 		Status:            Pendente,
-		TimeStamp:         time.Now(),
-		UltimaAtualizacao: time.Now(),
+		TimeStamp:         agora,
+		UltimaAtualizacao: agora,
 		Total:             total,
 	}, nil
 }
@@ -68,7 +76,12 @@ func (p *Pedido) UpdateStatus(status StatusPedido) error {
 	default:
 		return errors.New("status inválido")
 	}
-	p.UltimaAtualizacao = time.Now()
+	local, err := time.LoadLocation("America/Sao_Paulo")
+	if err != nil {
+		return errors.New("erro ao carregar localização")
+	}
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
+	p.UltimaAtualizacao = agora
 
 	return nil
 }
