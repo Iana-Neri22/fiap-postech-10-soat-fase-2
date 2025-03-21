@@ -5,8 +5,6 @@ import (
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
 	"lanchonete/domain/usecases"
-
-	"github.com/google/uuid"
 )
 
 type pedidoUseCase struct {
