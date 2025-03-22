@@ -55,7 +55,6 @@ definitions:
       cliente:
         $ref: '#/definitions/entities.Cliente'
       identificacao:
-        description:
         type: string
       personalizacao:
         type: string
@@ -79,10 +78,6 @@ definitions:
       categoria:
         $ref: '#/definitions/entities.CatProduto'
       descricao:
-        description: "func ProdutoNew(identificacao string, nome string, categoria
-          string, preco float32) (*Produto, error) {\n\tif strings.TrimSpace(identificacao)
-          == \"\" || strings.TrimSpace(nome) == \"\" || strings.TrimSpace(categoria)
-          == \"\" {\n======="
         type: string
       identificacao:
         type: string
@@ -295,7 +290,7 @@ paths:
       - application/json
       description: Busca um acompanhamento
       parameters:
-      - description: Número do pedido
+      - description: Id do acompanhamento
         in: path
         name: ID
         required: true

@@ -71,7 +71,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Número do pedido",
+                        "description": "Id do acompanhamento",
                         "name": "ID",
                         "in": "path",
                         "required": true
@@ -682,7 +682,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.Cliente"
                 },
                 "identificacao": {
-                    "description": "\u003c\u003c\u003c\u003c\u003c\u003c\u003c HEAD",
                     "type": "string"
                 },
                 "personalizacao": {
@@ -717,7 +716,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.CatProduto"
                 },
                 "descricao": {
-                    "description": "func ProdutoNew(identificacao string, nome string, categoria string, preco float32) (*Produto, error) {\n\tif strings.TrimSpace(identificacao) == \"\" || strings.TrimSpace(nome) == \"\" || strings.TrimSpace(categoria) == \"\" {\n=======",
                     "type": "string"
                 },
                 "identificacao": {

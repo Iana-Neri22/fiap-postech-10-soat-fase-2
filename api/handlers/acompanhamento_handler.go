@@ -116,7 +116,7 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(a *gin.Context) {
 // @Router /acompanhamento/show [get]
 // @Accept  json
 // @Produce  json
-// @Param ID path string true "Número do pedido"
+// @Param ID path string true "Id do acompanhamento"
 // @Success 200 {object} presenters.AcompanhamentoDTO
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {

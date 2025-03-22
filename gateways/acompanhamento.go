@@ -61,55 +61,93 @@ func (ar *acompanhamentoRepository) BuscarPedidos(c context.Context, ID string) 
 func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, p *entities.Pedido) error {
 	fmt.Printf("Tentando adicionar pedido %s ao acompanhamento %s\n", p.Identificacao, acompanhamento.ID)
 
+	// Buscar o pedido
 	pedido, err := ar.BuscarPedidos(c, p.Identificacao)
 	if err != nil {
 		return fmt.Errorf("erro ao buscar pedido: %v", err)
 	}
 	fmt.Printf("Pedido encontrado: %+v\n", pedido)
 
-	currentAcompanhamento, err := ar.BuscarAcompanhamento(c, acompanhamento.ID)
+	// Listar todos os documentos na coleção
+	cursor, err := ar.database.Collection(ar.collection).Find(c, bson.M{})
 	if err != nil {
-		return fmt.Errorf("acompanhamento não encontrado: %v", err)
+		return fmt.Errorf("erro ao listar documentos: %v", err)
 	}
-	fmt.Printf("Acompanhamento encontrado: %+v\n", currentAcompanhamento)
+	defer cursor.Close(c)
 
-	currentAcompanhamento.AdicionarPedido(pedido)
-	fmt.Printf("Pedidos após adicionar: %+v\n", currentAcompanhamento.Pedidos.Listar())
+	var documentos []bson.M
+	if err = cursor.All(c, &documentos); err != nil {
+		return fmt.Errorf("erro ao decodificar documentos: %v", err)
+	}
 
-	filter := bson.M{"ID": acompanhamento.ID}
+	fmt.Printf("Encontrados %d documentos na coleção\n", len(documentos))
 
+	// Procurar o documento com o ID correto
+	var documentoAlvo bson.M
+	var documentoID interface{}
+	var idField string
+
+	for _, doc := range documentos {
+		// Verificar todos os campos possíveis de ID
+		for _, field := range []string{"id", "_id", "ID"} {
+			if id, exists := doc[field]; exists {
+				idStr := fmt.Sprintf("%v", id) // Converter para string para comparação
+				fmt.Printf("Documento com %s=%v\n", field, idStr)
+
+				if idStr == acompanhamento.ID {
+					documentoAlvo = doc
+					documentoID = id
+					idField = field
+					fmt.Printf("Documento alvo encontrado com %s=%v\n", field, id)
+					break
+				}
+			}
+		}
+		if documentoAlvo != nil {
+			break
+		}
+	}
+
+	if documentoAlvo == nil {
+		return fmt.Errorf("acompanhamento com ID %s não encontrado em nenhum documento", acompanhamento.ID)
+	}
+
+	// Construir o filtro com o campo de ID correto
+	filter := bson.M{idField: documentoID}
+	fmt.Printf("Usando filtro para atualização: %+v\n", filter)
+
+	// Verificar a estrutura atual do documento
+	var acompanhamentoAtual entities.AcompanhamentoPedido
+	err = ar.database.Collection(ar.collection).FindOne(c, filter).Decode(&acompanhamentoAtual)
+	if err != nil {
+		return fmt.Errorf("erro ao decodificar acompanhamento: %v", err)
+	}
+
+	// Adicionar o pedido à fila
+	acompanhamentoAtual.Pedidos.Enfileirar(pedido)
+
+	// Obter a lista de pedidos atualizada
+	pedidosAtualizados := acompanhamentoAtual.Pedidos.Listar()
+	fmt.Printf("Pedidos após adicionar: %+v\n", pedidosAtualizados)
+
+	// Atualizar o documento
 	update := bson.M{
 		"$set": bson.M{
-			"pedidos":           currentAcompanhamento.Pedidos,
+			"pedidos":           bson.M{"pedidos": pedidosAtualizados},
 			"ultimaAtualizacao": time.Now(),
 		},
 	}
-
-	fmt.Printf("Tentando atualizar com filter: %+v\n", filter)
-	fmt.Printf("Update: %+v\n", update)
 
 	result, err := ar.database.Collection(ar.collection).UpdateOne(c, filter, update)
 	if err != nil {
 		return fmt.Errorf("erro ao atualizar acompanhamento: %v", err)
 	}
 
-	fmt.Printf("Result: %+v\n", result)
+	fmt.Printf("Resultado da atualização: ModifiedCount=%d, MatchedCount=%d\n",
+		result.ModifiedCount, result.MatchedCount)
 
 	if result.ModifiedCount == 0 {
-		filter = bson.M{
-			"$or": []bson.M{
-				{"_id": acompanhamento.ID},
-				{"id": acompanhamento.ID},
-				{"ID": acompanhamento.ID},
-			},
-		}
-		result, err = ar.database.Collection(ar.collection).UpdateOne(c, filter, update)
-		if err != nil {
-			return fmt.Errorf("erro ao atualizar acompanhamento (segunda tentativa): %v", err)
-		}
-		if result.ModifiedCount == 0 {
-			return fmt.Errorf("acompanhamento com ID %s não encontrado após múltiplas tentativas", acompanhamento.ID)
-		}
+		return fmt.Errorf("nenhum documento foi atualizado")
 	}
 
 	return nil
@@ -129,7 +167,7 @@ func (ar *acompanhamentoRepository) BuscarAcompanhamento(ctx context.Context, ID
 
 	filter := bson.M{}
 	if ID != "" {
-		filter["_id"] = ID
+		filter["id"] = ID
 	}
 
 	fmt.Printf("Usando filter: %+v\n", filter)
