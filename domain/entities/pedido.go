@@ -23,8 +23,9 @@ type Pedido struct {
 	Produtos          []Produto			`json:"produtos"`
 	Personalizacao	  string			`json:"personalizacao"`
 	Status            StatusPedido		`json:"status"`
-	TimeStamp         time.Time			`json:"timeStamp" format:"date-time"`
-	UltimaAtualizacao time.Time			`json:"ultimaAtualizacao" format:"date-time"`
+	StatusPagamento   string			`json:"statusPagamento"`
+	TimeStamp         string			`json:"timeStamp" format:"date-time"`
+	UltimaAtualizacao string			`json:"ultimaAtualizacao" format:"date-time"`
 	Total             float32			`json:"total"`
 }
 
@@ -55,7 +56,7 @@ func PedidoNew(cliente Cliente, produtos []Produto, personalizacao string) (*Ped
 	if err != nil {
 		return nil, errors.New("erro ao carregar localização")
 	}
-	agora := time.Now().In(local)
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
 
 	return &Pedido{
 		Identificacao:     id_string,
@@ -63,25 +64,26 @@ func PedidoNew(cliente Cliente, produtos []Produto, personalizacao string) (*Ped
 		Produtos:          produtos,
 		Personalizacao:    personalizacao,
 		Status:            Pendente,
+		StatusPagamento:   "Pendente",
 		TimeStamp:         agora,
 		UltimaAtualizacao: agora,
 		Total:             total,
 	}, nil
 }
 
-func (p *Pedido) UpdateStatus(status StatusPedido) error {
+func (p *Pedido) UpdateStatus(status StatusPedido) (ultimaAtualizacao string, err error) {
 	switch status {
 	case Recebido, EmPreparacao, Pronto, Finalizado:
 		p.Status = status
 	default:
-		return errors.New("status inválido")
+		return "", errors.New("status inválido")
 	}
 	local, err := time.LoadLocation("America/Sao_Paulo")
 	if err != nil {
-		return errors.New("erro ao carregar localização")
+		return "", errors.New("erro ao carregar localização")
 	}
-	agora := time.Now().In(local)
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
 	p.UltimaAtualizacao = agora
 
-	return nil
+	return p.UltimaAtualizacao, nil
 }

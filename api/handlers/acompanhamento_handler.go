@@ -85,8 +85,8 @@ func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 // @Router /acompanhamento/{IDAcompanhamento}/{IDPedido} [post]
 // @Accept json
 // @Produce json
-// @Param IDAcompanhamento path string true "ID do acompanhamento" example:"acc123"
-// @Param IDPedido path string true "ID do pedido" example:"ped456"
+// @Param IDAcompanhamento path string true "ID do acompanhamento"
+// @Param IDPedido path string true "ID do pedido"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 404 {object} response.ErrorResponse "Pedido ou acompanhamento não encontrado"
@@ -116,7 +116,7 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(a *gin.Context) {
 // @Router /acompanhamento/show [get]
 // @Accept  json
 // @Produce  json
-// @Param ID path string true "Número do pedido"
+// @Param ID path string true "ID do acompanhamento"
 // @Success 200 {object} presenters.AcompanhamentoDTO
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
@@ -129,14 +129,14 @@ func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 				return
 			}
-			acompanhamento = newAcompanhamento
+			acompanhamento = &newAcompanhamento
 		} else {
 			c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 			return
 		}
 	}
 
-	acompanhamentoDto := presenters.NewAcompanhamentoDTO(&acompanhamento)
+	acompanhamentoDto := presenters.NewAcompanhamentoDTO(acompanhamento)
 	c.JSON(http.StatusOK, acompanhamentoDto)
 }
 

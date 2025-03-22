@@ -16,10 +16,11 @@ func NewPedidoBuscarPorIdUseCase(pedidoRepository repository.PedidoRepository) *
 	}
 }
 
-func (pduc *PedidoBuscarPorIdUseCase) Run(c context.Context, identificacao string) (entities.Pedido, error) {
+func (pduc *PedidoBuscarPorIdUseCase) Run(c context.Context, identificacao string) (*entities.Pedido, error) {
+
 	pedido, err := pduc.pedidoRepository.BuscarPedido(c, identificacao)
 	if err != nil {
-		return entities.Pedido{}, err
+		return nil, err
 	}
 	return pedido, nil
 }

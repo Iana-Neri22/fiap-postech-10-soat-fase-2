@@ -24,7 +24,7 @@ func NewAcompanhamentoDTO(a *entities.AcompanhamentoPedido) *AcompanhamentoDTO {
 		pedidos = append(pedidos, PedidoDTO{
 			Identificacao: p.Identificacao,
 			Status:        p.Status,
-			TempoEstimado: time.Duration(0),
+			TempoEstimado: time.Duration(900),
 		})
 	}
 	return &AcompanhamentoDTO{

@@ -3,6 +3,7 @@ package entities
 import (
 	"sort"
 	"sync"
+	"time"
 )
 
 type FilaPedidos struct {
@@ -31,7 +32,9 @@ func (f *FilaPedidos) Enfileirar(p Pedido) {
 	f.Pedidos = append(f.Pedidos, p)
 
 	sort.Slice(f.Pedidos, func(i, j int) bool {
-		return f.Pedidos[i].TimeStamp.Before(f.Pedidos[j].TimeStamp)
+		timeI, _ := time.Parse(time.RFC3339, f.Pedidos[i].TimeStamp)
+		timeJ, _ := time.Parse(time.RFC3339, f.Pedidos[j].TimeStamp)
+		return timeI.Before(timeJ)
 	})
 }
 

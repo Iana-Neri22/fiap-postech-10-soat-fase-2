@@ -12,30 +12,36 @@ type AcompanhamentoPedido struct {
 	ID               string
 	Pedidos          FilaPedidos
 	TempoEstimado    time.Duration
-	UltimaAtualizacao time.Time
+	UltimaAtualizacao string
 }
 
 func NewAcompanhamentoPedido() *AcompanhamentoPedido {
+	local, _ := time.LoadLocation("America/Sao_Paulo")
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
 	return &AcompanhamentoPedido{
 		Pedidos:           NewFilaPedidos(),
 		TempoEstimado:     DefaultPreparationTime,
-		UltimaAtualizacao: time.Now(),
+		UltimaAtualizacao: agora,
 	}
 }
 
 func (a *AcompanhamentoPedido) AdicionarPedido(pedido Pedido) {
+	local, _ := time.LoadLocation("America/Sao_Paulo")
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
 	if pedido.Status == Recebido {
 		a.Pedidos.Enfileirar(pedido)
-		a.UltimaAtualizacao = time.Now()
+		a.UltimaAtualizacao = agora
 	}
 }
 
 func (a *AcompanhamentoPedido) AtualizarStatusPedido(identificacao string, novoStatus StatusPedido) bool {
+	local, _ := time.LoadLocation("America/Sao_Paulo")
+	agora := time.Now().In(local).Format("2006-01-02 15:04:05")
 	pedidos := a.Pedidos.Listar()
 	for i, pedido := range pedidos {
 		if pedido.Identificacao == identificacao {
 			pedido.Status = novoStatus
-			pedido.UltimaAtualizacao = time.Now()
+			pedido.UltimaAtualizacao = agora
 
 			if novoStatus == Finalizado {
 				a.Pedidos = a.removerPedidoNaPosicao(i)
@@ -43,7 +49,7 @@ func (a *AcompanhamentoPedido) AtualizarStatusPedido(identificacao string, novoS
 				pedidos[i] = pedido
 			}
 
-			a.UltimaAtualizacao = time.Now()
+			a.UltimaAtualizacao = agora
 			return true
 		}
 	}

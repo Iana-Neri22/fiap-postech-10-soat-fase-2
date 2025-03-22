@@ -15,13 +15,21 @@ type PedidoHandler struct {
 	PedidoIncluirUseCase         usecases.PedidoIncluirUseCase
 	PedidoBuscarPorIdUseCase     usecases.PedidoBuscarPorIdUseCase
 	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
+	ProdutoBuscarPorIdUseCase    usecases.ProdutoBuscaPorIdUseCase
+	PedidoListarTodosUseCase     usecases.PedidoListarTodosUseCase
 }
 
-func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase, pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase) *PedidoHandler {
+func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase,
+	pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase,
+	pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase,
+	produtoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase,
+	pedidoListarTodosUseCase usecases.PedidoListarTodosUseCase) *PedidoHandler {
 	return &PedidoHandler{
 		PedidoIncluirUseCase:         pedidoIncluirUseCase,
 		PedidoBuscarPorIdUseCase:     pedidoBuscarPorIdUseCase,
 		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
+		ProdutoBuscarPorIdUseCase:    produtoBuscarPorIdUseCase,
+		PedidoListarTodosUseCase:     pedidoListarTodosUseCase,
 	}
 }
 
@@ -43,6 +51,13 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
+	for _, produto := range pedido.Produtos {
+		_, err = h.ProdutoBuscarPorIdUseCase.Run(r, produto.Identificacao)
+		if err != nil {
+			r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Produto não Cadastrado!"})
+			return
+		}
+	}
 	_, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
@@ -99,4 +114,23 @@ func (h *PedidoHandler) AtualizarStatusPedido(r *gin.Context) {
 	r.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Status do pedido atualizado com sucesso",
 	})
+}
+
+// ProdutoListarTodos godoc
+// @Summary Lista todos os pedidos no banco
+// @Description Lista todos os pedidos presentes no banco
+// @Tags pedido
+// @Router /pedidos/listartodos [POST]
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} []entities.Pedido
+// @Failure 400 {object} response.ErrorResponse
+func (h *PedidoHandler) ListarTodosOsPedidos(r *gin.Context) {
+	pedidos, err := h.PedidoListarTodosUseCase.Run(r)
+	if err != nil {
+		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	r.JSON(http.StatusOK, pedidos)
 }

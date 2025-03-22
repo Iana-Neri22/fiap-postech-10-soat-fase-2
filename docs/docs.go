@@ -71,7 +71,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Número do pedido",
+                        "description": "ID do acompanhamento",
                         "name": "ID",
                         "in": "path",
                         "required": true
@@ -438,6 +438,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/pedidos/listartodos": {
+            "post": {
+                "description": "Lista todos os pedidos presentes no banco",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Lista todos os pedidos no banco",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Pedido"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/pedidos/{ID}": {
             "get": {
                 "description": "Busca um pedido",
@@ -561,6 +593,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/produto/editar": {
+            "post": {
+                "description": "Edita um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Edita um produto",
+                "parameters": [
+                    {
+                        "description": "Produto",
+                        "name": "cliente",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Produto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/produto/{id}": {
             "get": {
                 "description": "Busca um produto",
@@ -588,6 +660,115 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/entities.Produto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Remove um produto",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id do produto",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos": {
+            "get": {
+                "description": "Lista todos os produtos cadastrados",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Lista todos os produtos no banco",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Produto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/{categoria}": {
+            "get": {
+                "description": "Lista todos os produtos por categoria",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Lista os produtos por categoria",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Categoria de produtos",
+                        "name": "categoria",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Produto"
+                            }
                         }
                     },
                     "400": {
@@ -682,7 +863,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.Cliente"
                 },
                 "identificacao": {
-                    "description": "\u003c\u003c\u003c\u003c\u003c\u003c\u003c HEAD",
                     "type": "string"
                 },
                 "personalizacao": {
@@ -717,7 +897,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.CatProduto"
                 },
                 "descricao": {
-                    "description": "func ProdutoNew(identificacao string, nome string, categoria string, preco float32) (*Produto, error) {\n\tif strings.TrimSpace(identificacao) == \"\" || strings.TrimSpace(nome) == \"\" || strings.TrimSpace(categoria) == \"\" {\n=======",
                     "type": "string"
                 },
                 "identificacao": {
@@ -802,14 +981,7 @@ const docTemplate = `{
         "time.Duration": {
             "type": "integer",
             "enum": [
-                -9223372036854775808,
-                9223372036854775807,
-                1,
-                1000,
-                1000000,
-                1000000000,
-                60000000000,
-                3600000000000
+                900
             ],
             "x-enum-varnames": [
                 "minDuration",
