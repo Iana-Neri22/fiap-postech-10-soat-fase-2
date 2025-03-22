@@ -23,11 +23,11 @@ func (pduc *PedidoAtualizarStatusUseCase) Run(c context.Context, identificacao s
 		return err
 	}
 
-	err = pedido.UpdateStatus(entities.StatusPedido(status))
+	timeStamp, err := pedido.UpdateStatus(entities.StatusPedido(status))
 	if err != nil {
 		return err
 	}
-	err = pduc.pedidoGateway.AtualizarStatusPedido(c, identificacao, status)
+	err = pduc.pedidoGateway.AtualizarStatusPedido(c, identificacao, status, timeStamp)
 	if err != nil {
 		return err
 	}

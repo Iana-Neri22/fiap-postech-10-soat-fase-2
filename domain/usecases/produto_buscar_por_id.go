@@ -2,16 +2,23 @@ package usecases
 
 import (
 	"context"
+	"fmt"
 	"lanchonete/domain/entities"
+	"lanchonete/domain/repository"
 )
 
-type ProdutoBuscaPorIdUseCase interface {
-	Run(c context.Context, id string) (*entities.Produto, error)
-}
+// type ProdutoBuscaPorIdUseCase interface {
+// 	Run(c context.Context, id string) (*entities.Produto, error)
+// }
 
-/*
 type ProdutoBuscaPorIdUseCase struct {
 	produtoRepo repository.ProdutoRepository
+}
+
+func NewProdutoBuscaPorIdUseCase(produtoRepo repository.ProdutoRepository) *ProdutoBuscaPorIdUseCase {
+	return &ProdutoBuscaPorIdUseCase{
+		produtoRepo: produtoRepo,
+	}
 }
 
 func (pd *ProdutoBuscaPorIdUseCase) Run(c context.Context, id string) (*entities.Produto, error) {
@@ -22,5 +29,3 @@ func (pd *ProdutoBuscaPorIdUseCase) Run(c context.Context, id string) (*entities
 	}
 	return produto, nil
 }
-	"lanchonete/domain/entities"
-)*/

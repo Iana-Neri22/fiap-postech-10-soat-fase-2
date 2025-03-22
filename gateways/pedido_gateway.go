@@ -37,19 +37,16 @@ func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao string) (
 	return &pedido, err
 }
 
-func (pg *PedidoGateway) AtualizarStatusPedido(c context.Context, identificacao string, status string) error {
+func (pg *PedidoGateway) AtualizarStatusPedido(c context.Context, identificacao string, status string, ultimaAtualizacao string) error {
 	collection := pg.database.Collection(pg.collection)
 
 	filter := bson.M{"identificacao": identificacao}
-	update := bson.M{"$set": bson.M{"status": status}}
-
-	_, err := collection.UpdateOne(c, filter, update)
-	if err != nil {
-		return err
+	update := bson.M{"$set": bson.M{"status": status,
+		"UltimaAtualizacao": ultimaAtualizacao,
+	},
 	}
 
-	var pedido entities.Pedido
-	err = collection.FindOne(c, filter).Decode(&pedido)
+	_, err := collection.UpdateOne(c, filter, update)
 	if err != nil {
 		return err
 	}

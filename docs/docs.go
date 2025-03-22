@@ -496,6 +496,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/produtos": {
+            "get": {
+                "description": "Lista todos os produtos cadastrados",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Lista todos os produtos no banco",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Produto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -558,6 +590,9 @@ const docTemplate = `{
                     "$ref": "#/definitions/entities.Cliente"
                 },
                 "identificacao": {
+                    "type": "string"
+                },
+                "personalizacao": {
                     "type": "string"
                 },
                 "produtos": {

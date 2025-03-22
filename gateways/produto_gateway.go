@@ -36,3 +36,21 @@ func (pd *ProdutoGateway) BuscarProdutoPorId(c context.Context, id string) (*ent
 	err := collection.FindOne(c, bson.M{"identificacao": id}).Decode(&produto)
 	return produto, err
 }
+
+func (pd *ProdutoGateway) ListarTodosOsProdutos(c context.Context) ([]*entities.Produto, error) {
+	collection := pd.database.Collection(pd.collection)
+
+	cursor, err := collection.Find(c, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(c)
+
+	var produtos []*entities.Produto
+	if err = cursor.All(c, &produtos); err != nil {
+		return nil, err
+	}
+
+	return produtos, nil
+}

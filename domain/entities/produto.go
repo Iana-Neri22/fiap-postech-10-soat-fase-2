@@ -23,8 +23,8 @@ type Produto struct {
 }
 
 func ProdutoNew(identificacao string, nome string, categoria string, descricao string, preco float32) (*Produto, error) {
-	if strings.TrimSpace(identificacao) == "" || strings.TrimSpace(nome) == "" || preco == 0 || strings.TrimSpace(categoria) == "" {
-		return nil, errors.New("todos os campos são obrigatórios")
+	if strings.TrimSpace(identificacao) == "" || strings.TrimSpace(nome) == "" || preco <= 0 || strings.TrimSpace(categoria) == "" {
+		return nil, errors.New("todos os campos são obrigatórios e o preço maior que zero")
 	}
 
 	var cat_prod CatProduto

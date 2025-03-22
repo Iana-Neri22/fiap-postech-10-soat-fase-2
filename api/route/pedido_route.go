@@ -14,11 +14,13 @@ import (
 func NewPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	collection := "pedido"
 	pr := gateways.NewPedidoGateway(db, collection)
+	prod := gateways.NewProdutoGateway(db, "produto")
 	puc := &handler.PedidoHandler{
 		//PedidoUseCase: usecase.NewPedidoUseCase(pr),
 		PedidoIncluirUseCase:         *usecases.NewPedidoIncluirUseCase(pr),
 		PedidoBuscarPorIdUseCase:     *usecases.NewPedidoBuscarPorIdUseCase(pr),
 		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
+		ProdutoBuscarPorIdUseCase:    *usecases.NewProdutoBuscaPorIdUseCase(prod),
 	}
 
 	router.POST("/pedidos", puc.CriarPedido)

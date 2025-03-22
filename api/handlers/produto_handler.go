@@ -13,6 +13,15 @@ import (
 type ProdutoHandler struct {
 	ProdutoIncluirUseCase     usecases.ProdutoIncluirUseCase
 	ProdutoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase
+	ProdutoListarTodosUseCase usecases.ProdutoListarTodosUseCase
+}
+
+func NewProdutoHandler(produtoIncluirUseCase usecases.ProdutoIncluirUseCase, produtoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase, produtoListarTodosUseCase usecases.ProdutoListarTodosUseCase) *ProdutoHandler {
+	return &ProdutoHandler{
+		ProdutoIncluirUseCase:     produtoIncluirUseCase,
+		ProdutoBuscarPorIdUseCase: produtoBuscarPorIdUseCase,
+		ProdutoListarTodosUseCase: produtoListarTodosUseCase,
+	}
 }
 
 // CriarProduto godoc
@@ -65,4 +74,23 @@ func (ph *ProdutoHandler) ProdutoBuscarPorId(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, prd)
+}
+
+// ProdutoListarTodos godoc
+// @Summary Lista todos os produtos no banco
+// @Description Lista todos os produtos cadastrados
+// @Tags produto
+// @Router /produtos [GET]
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} []entities.Produto
+// @Failure 400 {object} response.ErrorResponse
+func (ph *ProdutoHandler) ProdutoListarTodos(c *gin.Context) {
+	produtos, err := ph.ProdutoListarTodosUseCase.Run(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, produtos)
 }

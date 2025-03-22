@@ -15,13 +15,15 @@ type PedidoHandler struct {
 	PedidoIncluirUseCase         usecases.PedidoIncluirUseCase
 	PedidoBuscarPorIdUseCase     usecases.PedidoBuscarPorIdUseCase
 	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
+	ProdutoBuscarPorIdUseCase    usecases.ProdutoBuscaPorIdUseCase
 }
 
-func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase, pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase) *PedidoHandler {
+func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase, pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase, produtoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase) *PedidoHandler {
 	return &PedidoHandler{
 		PedidoIncluirUseCase:         pedidoIncluirUseCase,
 		PedidoBuscarPorIdUseCase:     pedidoBuscarPorIdUseCase,
 		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
+		ProdutoBuscarPorIdUseCase:    produtoBuscarPorIdUseCase,
 	}
 }
 
@@ -50,6 +52,13 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
+	for _, produto := range pedido.Produtos {
+		_, err = h.ProdutoBuscarPorIdUseCase.Run(r, produto.Identificacao)
+		if err != nil {
+			r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Produto não Cadastrado!"})
+			return
+		}
+	}
 	_, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})

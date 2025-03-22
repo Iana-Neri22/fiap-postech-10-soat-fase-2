@@ -42,6 +42,8 @@ definitions:
         $ref: '#/definitions/entities.Cliente'
       identificacao:
         type: string
+      personalizacao:
+        type: string
       produtos:
         items:
           $ref: '#/definitions/entities.Produto'
@@ -413,6 +415,27 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Busca um produto
+      tags:
+      - produto
+  /produtos:
+    get:
+      consumes:
+      - application/json
+      description: Lista todos os produtos cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Produto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Lista todos os produtos no banco
       tags:
       - produto
 swagger: "2.0"
