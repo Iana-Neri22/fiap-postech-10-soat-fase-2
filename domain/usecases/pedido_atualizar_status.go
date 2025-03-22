@@ -10,7 +10,14 @@ type PedidoAtualizarStatusUseCase struct {
 	pedidoGateway repository.PedidoRepository
 }
 
+func NewPedidoAtualizarStatusUseCase(pedidoGateway repository.PedidoRepository) *PedidoAtualizarStatusUseCase {
+	return &PedidoAtualizarStatusUseCase{
+		pedidoGateway: pedidoGateway,
+	}
+}
+
 func (pduc *PedidoAtualizarStatusUseCase) Run(c context.Context, identificacao string, status string) error {
+
 	pedido, err := pduc.pedidoGateway.BuscarPedido(c, identificacao)
 	if err != nil {
 		return err

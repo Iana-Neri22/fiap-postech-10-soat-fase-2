@@ -21,7 +21,11 @@ func (puc *pedidoUseCase) CriarPedido(c context.Context, pedido *entities.Pedido
 	return puc.pedidoRepository.CriarPedido(c, pedido)
 }
 
+// <<<<<<< HEAD
 func (puc *pedidoUseCase) BuscarPedido(c context.Context, identificacao string) (entities.Pedido, error) {
+// =======
+// func (puc *pedidoUseCase) BuscarPedido(c context.Context, identificacao string) (*entities.Pedido, error) {
+// >>>>>>> Bruno
 	return puc.pedidoRepository.BuscarPedido(c, identificacao)
 }
 

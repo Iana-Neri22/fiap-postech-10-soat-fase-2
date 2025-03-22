@@ -34,7 +34,12 @@ func (uc *acompanhamentoUseCase) BuscarAcompanhamento(c context.Context, ID stri
 	return uc.acompanhamentoRepo.BuscarAcompanhamento(c, ID)
 }
 
-func (uc *acompanhamentoUseCase) AtualizarStatusPedido(c context.Context, acompanhamento *entities.AcompanhamentoPedido, identificacao string, novoStatus entities.StatusPedido) error {
+func (uc *acompanhamentoUseCase) AtualizarStatusPedido(c context.Context, acompanhamentoID string, identificacao string, novoStatus entities.StatusPedido) error {
+	acompanhamento, err := uc.acompanhamentoRepo.BuscarAcompanhamento(c, acompanhamentoID)
+	if err != nil {
+		return err
+	}
+
 	pedidos := acompanhamento.Pedidos.Listar()
 	updated := false
 

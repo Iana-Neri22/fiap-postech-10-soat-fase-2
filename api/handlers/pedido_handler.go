@@ -5,21 +5,36 @@ import (
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
 	response "lanchonete/domain/responses"
-	service "lanchonete/domain/services"
+// <<<<<<< HEAD
+	// service "lanchonete/domain/services"
+// =======
+// >>>>>>> Bruno
+	"lanchonete/domain/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type PedidoHandler struct {
-	PedidoUseCase service.PedidoUseCase
+	PedidoIncluirUseCase         usecases.PedidoIncluirUseCase
+	PedidoBuscarPorIdUseCase     usecases.PedidoBuscarPorIdUseCase
+	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
 }
 
-func NewPedidoHandler(pedidoUseCase service.PedidoUseCase) *PedidoHandler {
+func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase, pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase) *PedidoHandler {
 	return &PedidoHandler{
-		PedidoUseCase: pedidoUseCase,
+		PedidoIncluirUseCase:         pedidoIncluirUseCase,
+		PedidoBuscarPorIdUseCase:     pedidoBuscarPorIdUseCase,
+		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
 	}
 }
+
+// func NewPedidoHandler(pedidoUseCase service.PedidoUseCase) *PedidoHandler {
+// 	return &PedidoHandler{
+// 		PedidoUseCase:        pedidoUseCase,
+// 		PedidoIncluirUseCase: pedidoIncluirUseCase,
+// 	}
+// }
 
 // CriarPedido godoc
 // @Summary Cria um pedido
@@ -39,11 +54,17 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
-	err = h.PedidoUseCase.CriarPedido(r, &pedido)
+	_, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
+
+	// err = h.PedidoUseCase.CriarPedido(r, ped)
+	// if err != nil {
+	// 	r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+	// 	return
+	// }
 
 	r.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pedido criado com sucesso",
@@ -54,19 +75,53 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 // @Summary Busca um pedido
 // @Description Busca um pedido
 // @Tags pedido
+// <<<<<<< HEAD
 // @Router /pedidos/{ID} [get]
+// =======
+// >>>>>>> Bruno
 // @Accept  json
 // @Produce  json
 // @Param ID path string true "Número do pedido"
 // @Success 200 {object} entities.Pedido
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
-	ID := r.Param("ID")
-	pedido, err := h.PedidoUseCase.BuscarPedido(r, ID)
+// <<<<<<< HEAD
+	nroPedido := r.Param("nroPedido")
+	// pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, ID)
+// =======
+	// nroPedido := r.Param("nroPedido")
+	pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, nroPedido)
+// >>>>>>> Bruno
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	r.JSON(http.StatusOK, pedido)
+
+}
+
+// BuscarPedido godoc
+// @Summary Atualiza um pedido a partir de sua Identificação
+// @Description Atualizar um pedido
+// @Tags pedido
+// @Router /pedidos/{nroPedido}/status/{status} [put]
+// @Accept  json
+// @Produce  json
+// @Param nroPedido path string true "Número do pedido"
+// @Param status path string true "Novo Status do pedido"
+// @Success 200 {object} entities.Pedido
+// @Failure 400 {object} response.ErrorResponse
+func (h *PedidoHandler) AtualizarStatusPedido(r *gin.Context) {
+	nroPedido := r.Param("nroPedido")
+	status := r.Param("status")
+	err := h.PedidoAtualizarStatusUseCase.Run(r, nroPedido, status)
+	if err != nil {
+		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	r.JSON(http.StatusOK, response.SuccessResponse{
+		Message: "Status do pedido atualizado com sucesso",
+	})
 }

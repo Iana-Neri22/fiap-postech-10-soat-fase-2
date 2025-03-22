@@ -150,6 +150,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/acompanhamento/{IDAcompanhamento}/{IDPedido}/{status}": {
+            "put": {
+                "description": "Atualiza o status de um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "acompanhamento"
+                ],
+                "summary": "Atualiza o status de um pedido",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do acompanhamento",
+                        "name": "IDAcompanhamento",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID do pedido",
+                        "name": "IDPedido",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Novo status",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/acompanhamento/{ID}": {
             "get": {
                 "description": "Busca um pedido",
@@ -177,53 +229,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/entities.AcompanhamentoPedido"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/acompanhamento/{ID}/status": {
-            "put": {
-                "description": "Atualiza o status de um pedido",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "acompanhamento"
-                ],
-                "summary": "Atualiza o status de um pedido",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID do pedido",
-                        "name": "ID",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Novo status",
-                        "name": "status",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "400": {
@@ -470,6 +475,129 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/pedidos/{nroPedido}/status/{status}": {
+            "put": {
+                "description": "Atualizar um pedido",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pedido"
+                ],
+                "summary": "Atualiza um pedido a partir de sua Identificação",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Número do pedido",
+                        "name": "nroPedido",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Novo Status do pedido",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Pedido"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produto": {
+            "post": {
+                "description": "Cria um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Cria um produto",
+                "parameters": [
+                    {
+                        "description": "Produto",
+                        "name": "cliente",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Produto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/produto/{id}": {
+            "get": {
+                "description": "Busca um produto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produto"
+                ],
+                "summary": "Busca um produto",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id do produto",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Produto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -495,12 +623,14 @@ const docTemplate = `{
             "enum": [
                 "Lanche",
                 "Acompanhamento",
-                "Bebida"
+                "Bebida",
+                "Sobremesa"
             ],
             "x-enum-varnames": [
                 "Lanche",
                 "Acompanhamento",
-                "Bebida"
+                "Bebida",
+                "Sobremesa"
             ]
         },
         "entities.Cliente": {
@@ -518,7 +648,15 @@ const docTemplate = `{
             }
         },
         "entities.FilaPedidos": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "pedidos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.Pedido"
+                    }
+                }
+            }
         },
         "entities.Pagamento": {
             "type": "object",
@@ -540,10 +678,14 @@ const docTemplate = `{
         "entities.Pedido": {
             "type": "object",
             "properties": {
-                "cpf": {
-                    "type": "string"
+                "cliente": {
+                    "$ref": "#/definitions/entities.Cliente"
                 },
                 "identificacao": {
+                    "description": "\u003c\u003c\u003c\u003c\u003c\u003c\u003c HEAD",
+                    "type": "string"
+                },
+                "personalizacao": {
                     "type": "string"
                 },
                 "produtos": {
@@ -573,6 +715,10 @@ const docTemplate = `{
             "properties": {
                 "categoria": {
                     "$ref": "#/definitions/entities.CatProduto"
+                },
+                "descricao": {
+                    "description": "func ProdutoNew(identificacao string, nome string, categoria string, preco float32) (*Produto, error) {\n\tif strings.TrimSpace(identificacao) == \"\" || strings.TrimSpace(nome) == \"\" || strings.TrimSpace(categoria) == \"\" {\n=======",
+                    "type": "string"
                 },
                 "identificacao": {
                     "type": "string"
@@ -605,11 +751,18 @@ const docTemplate = `{
         "presenters.AcompanhamentoDTO": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "pedidos": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/presenters.PedidoDTO"
                     }
+                },
+                "tempoEstimado": {
+                    "description": "in minutes",
+                    "type": "integer"
                 }
             }
         },
@@ -649,7 +802,14 @@ const docTemplate = `{
         "time.Duration": {
             "type": "integer",
             "enum": [
-                900
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
             ],
             "x-enum-varnames": [
                 "minDuration",
@@ -675,6 +835,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "API para o Tech Challenge 2 da FIAP - SOAT",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

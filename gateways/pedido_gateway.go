@@ -31,13 +31,21 @@ func (pg *PedidoGateway) CriarPedido(c context.Context, pedido *entities.Pedido)
 	return nil
 }
 
+// <<<<<<< HEAD
 func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao string) (entities.Pedido, error) {
+// =======
+// func (pg *PedidoGateway) BuscarPedido(c context.Context, identificacao string) (*entities.Pedido, error) {
+// >>>>>>> Bruno
 	collection := pg.database.Collection(pg.collection)
 
 	var pedido entities.Pedido
 
 	err := collection.FindOne(c, bson.M{"identificacao": identificacao}).Decode(&pedido)
+// <<<<<<< HEAD
 	return pedido, err
+// =======
+// 	return &pedido, err
+// >>>>>>> Bruno
 }
 
 func (pg *PedidoGateway) AtualizarStatusPedido(c context.Context, identificacao string, status string) error {

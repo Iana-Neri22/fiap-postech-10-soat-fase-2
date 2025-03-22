@@ -18,12 +18,18 @@ func NewProdutoIncluirUseCase(produtoRepo repository.ProdutoRepository) usecases
 	}
 }
 
-func (pd *ProdutoIncluirUseCase) Run(c context.Context, identificacao string, nome string, categoria string, preco float32) (*entities.Produto, error) {
-	// Preco, err := decimal.NewFromString(preco)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("preço deve ser um número válido: %w", err)
-	// }
-	produto, err := entities.ProdutoNew(identificacao, nome, categoria, preco)
+// <<<<<<< HEAD
+// func (pd *ProdutoIncluirUseCase) Run(c context.Context, identificacao string, nome string, categoria string, preco float32) (*entities.Produto, error) {
+// 	// Preco, err := decimal.NewFromString(preco)
+// 	// if err != nil {
+// 	// 	return nil, fmt.Errorf("preço deve ser um número válido: %w", err)
+// 	// }
+// 	produto, err := entities.ProdutoNew(identificacao, nome, categoria, preco)
+// =======
+func (pd *ProdutoIncluirUseCase) Run(c context.Context, identificacao string, nome string, categoria string, descricao string, preco float32) (*entities.Produto, error) {
+
+	produto, err := entities.ProdutoNew(identificacao, nome, categoria, descricao, preco)
+// >>>>>>> Bruno
 
 	if err != nil {
 		return nil, fmt.Errorf("criação de produto inválida: %w", err)

@@ -10,12 +10,30 @@ type PedidoIncluirUseCase struct {
 	pedidoRepository repository.PedidoRepository
 }
 
-func (pduc *PedidoIncluirUseCase) Run(c context.Context, indentificacao string, produtos []entities.Produto) (*entities.Pedido, error) {
-	pedido, err := entities.PedidoNew(indentificacao, produtos)
+func NewPedidoIncluirUseCase(pedidoRepository repository.PedidoRepository) *PedidoIncluirUseCase {
+	return &PedidoIncluirUseCase{
+		pedidoRepository: pedidoRepository,
+	}
+}
+
+func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto, personalizacao string) (*entities.Pedido, error) {
+	/*
+		for _, id := range produtos {
+			_, err := pduc.pedidoRepository.BuscarProdutoPorId(c, id)
+			if err != nil {
+				return nil, errors.New("produto não encontrado")
+			}
+		}*/
+
+	pedido, err := entities.PedidoNew(cliente, produtos, personalizacao)
 	if err != nil {
 		return nil, err
 	}
 	err = pduc.pedidoRepository.CriarPedido(c, pedido)
+// <<<<<<< HEAD
+// =======
+
+// >>>>>>> Bruno
 	if err != nil {
 		return nil, err
 	}

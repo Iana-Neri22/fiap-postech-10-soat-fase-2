@@ -11,6 +11,8 @@ import (
 	"lanchonete/infra/database/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type acompanhamentoRepository struct {
@@ -168,4 +170,78 @@ func (ar *acompanhamentoRepository) BuscarAcompanhamento(ctx context.Context, ID
 
 	acompanhamento.Pedidos.EnsureMutex()
 	return acompanhamento, nil
+}
+
+func (ar *acompanhamentoRepository) AtualizarStatusPedido(ctx context.Context, acompanhamentoID string, identificacao string, novoStatus entities.StatusPedido) error {
+	// Adicionar logs para debug
+	fmt.Printf("Tentando atualizar pedido %s no acompanhamento %s para status %s\n",
+		identificacao, acompanhamentoID, novoStatus)
+
+	// Primeiro buscar o documento para confirmar a estrutura
+	var doc bson.M
+	err := ar.database.Collection(ar.collection).FindOne(ctx, bson.M{"ID": acompanhamentoID}).Decode(&doc)
+	if err != nil {
+		return fmt.Errorf("erro ao buscar acompanhamento: %v", err)
+	}
+	fmt.Printf("Documento encontrado: %+v\n", doc)
+
+	// Tentar atualizar usando diferentes estruturas de caminho
+	updates := []bson.M{
+		// Tentativa 1: estrutura aninhada direta
+		bson.M(
+			bson.M{"identificacao": identificacao},
+		)}
+	// Tentativa 2: estrutura plana
+	// {
+	// 	"$set": bson.M{
+	// 		"pedidos.$[elem].status":            novoStatus,
+	// 		"pedidos.$[elem].ultimaAtualizacao": time.Now(),
+	// 		"ultimaAtualizacao":                 time.Now(),
+	// 	},
+	// },
+
+	// arrayFilters := options.Update().SetArrayFilters(options.ArrayFilters{
+	// 	Filters: []interface{}{
+	// 		bson.M{"elem.identificacao": identificacao},
+	// 	},
+	// })
+
+	filter := bson.M{"ID": acompanhamentoID}
+
+	// Tentar cada estrutura de update até uma funcionar
+	var result *mongo.UpdateResult
+	for i, update := range updates {
+		fmt.Printf("Tentando update %d: %+v\n", i+1, update)
+		result, err = ar.database.Collection(ar.collection).UpdateOne(ctx, filter, update, arrayFilters)
+		if err == nil && result.ModifiedCount > 0 {
+			break
+		}
+		fmt.Printf("Tentativa %d falhou: %v\n", i+1, err)
+	}
+
+	if err != nil {
+		return fmt.Errorf("todas as tentativas de atualização falharam: %v", err)
+	}
+
+	if result.ModifiedCount == 0 {
+		return fmt.Errorf("pedido não encontrado na fila")
+	}
+
+	// Se chegou aqui, a atualização foi bem sucedida
+	fmt.Printf("Atualização bem sucedida. ModifiedCount: %d\n", result.ModifiedCount)
+
+	// Remover se finalizado
+	if novoStatus == entities.Finalizado {
+		removeUpdate := bson.M{
+			"$pull": bson.M{
+				"pedidos.pedidos": bson.M{"identificacao": identificacao},
+			},
+		}
+		_, err = ar.database.Collection(ar.collection).UpdateOne(ctx, filter, removeUpdate)
+		if err != nil {
+			return fmt.Errorf("erro ao remover pedido finalizado: %v", err)
+		}
+	}
+
+	return nil
 }

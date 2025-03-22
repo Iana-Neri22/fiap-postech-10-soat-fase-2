@@ -4,6 +4,7 @@ import (
 	handler "lanchonete/api/handlers"
 	usecase "lanchonete/application/usecases"
 	"lanchonete/bootstrap"
+	"lanchonete/domain/usecases"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
 
@@ -15,8 +16,10 @@ import (
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 
 	ar := gateways.NewAcompanhamentoRepository(db, CollectionAcompanhamento)
+	pr := gateways.NewPedidoGateway(db, CollectionPedido)
 	auc := &handler.AcompanhamentoHandler{
-		AcompanhamentoUseCase: usecase.NewAcompanhamentoUseCase(ar),
+		AcompanhamentoUseCase:        usecase.NewAcompanhamentoUseCase(ar),
+		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
 	}
 
 	// Debug print to confirm route registration
@@ -26,5 +29,5 @@ func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.
 	router.GET("/acompanhamento/show", auc.BuscarAcompanhamento)
 	router.GET("/acompanhamento/:ID", auc.BuscarPedido)
 	router.POST("/acompanhamento/:IDAcompanhamento/:IDPedido", auc.AdicionarPedido)
-	router.PUT("/acompanhamento/:ID/status", auc.AtualizarStatusPedido)
+	router.PUT("acompanhamento/:IDAcompanhamento/:IDPedido/:status", auc.AtualizarStatusPedido)
 }

@@ -6,6 +6,7 @@ import (
 	"lanchonete/domain/entities"
 	response "lanchonete/domain/responses"
 	service "lanchonete/domain/services"
+	"lanchonete/domain/usecases"
 	"lanchonete/presenters"
 	"net/http"
 
@@ -13,12 +14,14 @@ import (
 )
 
 type AcompanhamentoHandler struct {
-	AcompanhamentoUseCase service.AcompanhamentoUseCase
+	AcompanhamentoUseCase        service.AcompanhamentoUseCase
+	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
 }
 
-func NewAcompanhamentoHandler(auc service.AcompanhamentoUseCase) *AcompanhamentoHandler {
+func NewAcompanhamentoHandler(auc service.AcompanhamentoUseCase, p usecases.PedidoAtualizarStatusUseCase) *AcompanhamentoHandler {
 	return &AcompanhamentoHandler{
-		AcompanhamentoUseCase: auc,
+		AcompanhamentoUseCase:        auc,
+		PedidoAtualizarStatusUseCase: p,
 	}
 }
 
@@ -143,34 +146,35 @@ func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
 // @Summary Atualiza o status de um pedido
 // @Description Atualiza o status de um pedido
 // @Tags acompanhamento
-// @Router /acompanhamento/{ID}/status [put]
+// @Router /acompanhamento/{IDAcompanhamento}/{IDPedido}/{status} [put]
 // @Accept  json
 // @Produce  json
-// @Param ID path string true "ID do pedido"
-// @Param status body string true "Novo status"
+// @Param IDAcompanhamento path string true "ID do acompanhamento"
+// @Param IDPedido path string true "ID do pedido"
+// @Param status path string true "Novo status"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) AtualizarStatusPedido(a *gin.Context) {
-	ID := a.Param("ID")
+	idPedido := a.Param("IDPedido")
+	status := a.Param("status")
+	err := ah.PedidoAtualizarStatusUseCase.Run(a, idPedido, status)
 
-	var requestBody struct {
-		Status string `json:"status"`
-	}
+	idAcompanhamento := a.Param("IDAcompanhamento")
 
-	if err := a.ShouldBindJSON(&requestBody); err != nil {
+	if err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	// Get the acompanhamento
-	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(a, "")
+	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(a, idAcompanhamento)
 	if err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	// Update the status
-	err = ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, &acompanhamento, ID, entities.StatusPedido(requestBody.Status))
+	err = ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, acompanhamento.ID, idPedido, entities.StatusPedido(status))
 	if err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
