@@ -50,6 +50,8 @@ definitions:
         type: array
       status:
         $ref: '#/definitions/entities.StatusPedido'
+      statusPagamento:
+        type: string
       timeStamp:
         type: string
       total:
@@ -366,6 +368,27 @@ paths:
       summary: Atualiza um pedido a partir de sua Identificação
       tags:
       - pedido
+  /pedidos/listartodos:
+    post:
+      consumes:
+      - application/json
+      description: Lista todos os pedidos presentes no banco
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Pedido'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Lista todos os pedidos no banco
+      tags:
+      - pedido
   /produto:
     post:
       consumes:
@@ -393,6 +416,30 @@ paths:
       tags:
       - produto
   /produto/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove um produto
+      parameters:
+      - description: id do produto
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Remove um produto
+      tags:
+      - produto
     get:
       consumes:
       - application/json
@@ -417,6 +464,32 @@ paths:
       summary: Busca um produto
       tags:
       - produto
+  /produto/editar:
+    post:
+      consumes:
+      - application/json
+      description: Edita um produto
+      parameters:
+      - description: Produto
+        in: body
+        name: cliente
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Produto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Edita um produto
+      tags:
+      - produto
   /produtos:
     get:
       consumes:
@@ -436,6 +509,33 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Lista todos os produtos no banco
+      tags:
+      - produto
+  /produtos/{categoria}:
+    get:
+      consumes:
+      - application/json
+      description: Lista todos os produtos por categoria
+      parameters:
+      - description: Categoria de produtos
+        in: path
+        name: categoria
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Produto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Lista os produtos por categoria
       tags:
       - produto
 swagger: "2.0"

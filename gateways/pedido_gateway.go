@@ -53,3 +53,21 @@ func (pg *PedidoGateway) AtualizarStatusPedido(c context.Context, identificacao 
 
 	return nil
 }
+
+func (pg *PedidoGateway) ListarTodosOsPedidos(c context.Context) ([]*entities.Pedido, error) {
+	collection := pg.database.Collection(pg.collection)
+
+	cursor, err := collection.Find(c, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(c)
+
+	var pedidos []*entities.Pedido
+	if err = cursor.All(c, &pedidos); err != nil {
+		return nil, err
+	}
+
+	return pedidos, nil
+}
