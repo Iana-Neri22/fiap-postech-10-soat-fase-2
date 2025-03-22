@@ -154,13 +154,6 @@ func (ar *acompanhamentoRepository) AdicionarPedido(c context.Context, acompanha
 	return nil
 }
 
-// func GenerateShortID() string {
-// 	timestamp := time.Now().UnixNano() / int64(time.Millisecond)
-
-// 	id := fmt.Sprintf("acc%s", strconv.FormatInt(timestamp, 36)[len(strconv.FormatInt(timestamp, 36))-6:])
-// 	return id
-// }
-
 func (ar *acompanhamentoRepository) BuscarAcompanhamento(ctx context.Context, ID string) (*entities.AcompanhamentoPedido, error) {
 	var acompanhamento *entities.AcompanhamentoPedido
 
