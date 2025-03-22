@@ -1,14 +1,13 @@
 {
-    "schemes": "marshal.Schemes",
     "swagger": "2.0",
     "info": {
-        "description": "{{escape .Description}}",
-        "title": "{{.Title}}",
+        "description": "API para o Tech Challenge 2 da FIAP - SOAT",
+        "title": "Lanchonete API - Tech Challenge 2",
         "contact": {},
-        "version": "{{.Version}}"
+        "version": "1.0"
     },
-    "host": "{{.Host}}",
-    "basePath": "{{.BasePath}}",
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
         "/acompanhamento": {
             "post": {
@@ -872,6 +871,9 @@
                 "status": {
                     "$ref": "#/definitions/entities.StatusPedido"
                 },
+                "statusPagamento": {
+                    "type": "string"
+                },
                 "timeStamp": {
                     "type": "string",
                     "format": "date-time"
@@ -976,7 +978,14 @@
         "time.Duration": {
             "type": "integer",
             "enum": [
-                900
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
             ],
             "x-enum-varnames": [
                 "minDuration",

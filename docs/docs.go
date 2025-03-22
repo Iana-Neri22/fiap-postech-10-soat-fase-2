@@ -877,6 +877,9 @@ const docTemplate = `{
                 "status": {
                     "$ref": "#/definitions/entities.StatusPedido"
                 },
+                "statusPagamento": {
+                    "type": "string"
+                },
                 "timeStamp": {
                     "type": "string",
                     "format": "date-time"
@@ -981,7 +984,14 @@ const docTemplate = `{
         "time.Duration": {
             "type": "integer",
             "enum": [
-                900
+                -9223372036854775808,
+                9223372036854775807,
+                1,
+                1000,
+                1000000,
+                1000000000,
+                60000000000,
+                3600000000000
             ],
             "x-enum-varnames": [
                 "minDuration",

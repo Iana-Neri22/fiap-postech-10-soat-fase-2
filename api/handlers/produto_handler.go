@@ -41,7 +41,7 @@ func NewProdutoHandler(produtoIncluirUseCase usecases.ProdutoIncluirUseCase,
 // @Router /produto [post]
 // @Accept  json
 // @Produce  json
-// @Param cliente body entities.Produto true "Produto"
+// @Param produto body entities.Produto true "Produto"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
