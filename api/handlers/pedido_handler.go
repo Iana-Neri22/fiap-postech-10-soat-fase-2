@@ -5,10 +5,6 @@ import (
 	_ "lanchonete/docs"
 	"lanchonete/domain/entities"
 	response "lanchonete/domain/responses"
-// <<<<<<< HEAD
-	// service "lanchonete/domain/services"
-// =======
-// >>>>>>> Bruno
 	"lanchonete/domain/usecases"
 	"net/http"
 
@@ -28,13 +24,6 @@ func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase, pedido
 		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
 	}
 }
-
-// func NewPedidoHandler(pedidoUseCase service.PedidoUseCase) *PedidoHandler {
-// 	return &PedidoHandler{
-// 		PedidoUseCase:        pedidoUseCase,
-// 		PedidoIncluirUseCase: pedidoIncluirUseCase,
-// 	}
-// }
 
 // CriarPedido godoc
 // @Summary Cria um pedido
@@ -60,12 +49,6 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 		return
 	}
 
-	// err = h.PedidoUseCase.CriarPedido(r, ped)
-	// if err != nil {
-	// 	r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
-
 	r.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pedido criado com sucesso",
 	})
@@ -75,23 +58,15 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 // @Summary Busca um pedido
 // @Description Busca um pedido
 // @Tags pedido
-// <<<<<<< HEAD
 // @Router /pedidos/{ID} [get]
-// =======
-// >>>>>>> Bruno
 // @Accept  json
 // @Produce  json
 // @Param ID path string true "Número do pedido"
 // @Success 200 {object} entities.Pedido
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) BuscarPedido(r *gin.Context) {
-// <<<<<<< HEAD
 	nroPedido := r.Param("nroPedido")
-	// pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, ID)
-// =======
-	// nroPedido := r.Param("nroPedido")
 	pedido, err := h.PedidoBuscarPorIdUseCase.Run(r, nroPedido)
-// >>>>>>> Bruno
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return

@@ -7,7 +7,7 @@ import (
 
 type FilaPedidos struct {
 	Pedidos []Pedido    `bson:"pedidos" json:"pedidos"`
-	mu      *sync.Mutex `bson:"-" json:"-"` // "-" means this field won't be serialized
+	mu      *sync.Mutex `bson:"-" json:"-"`
 }
 
 func NewFilaPedidos() FilaPedidos {
@@ -17,7 +17,6 @@ func NewFilaPedidos() FilaPedidos {
 	}
 }
 
-// EnsureMutex ensures the mutex is initialized
 func (f *FilaPedidos) EnsureMutex() {
 	if f.mu == nil {
 		f.mu = &sync.Mutex{}
@@ -57,7 +56,6 @@ func (f *FilaPedidos) RemoverPedido(identificacao string) bool {
 
 	for i, pedido := range f.Pedidos {
 		if pedido.Identificacao == identificacao {
-			// Remove the pedido at position i
 			f.Pedidos = append(f.Pedidos[:i], f.Pedidos[i+1:]...)
 			return true
 		}

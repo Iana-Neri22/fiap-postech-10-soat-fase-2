@@ -2,10 +2,10 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
 	service "lanchonete/domain/services"
-	"time"
 )
 
 type acompanhamentoUseCase struct {
@@ -35,41 +35,8 @@ func (uc *acompanhamentoUseCase) BuscarAcompanhamento(c context.Context, ID stri
 }
 
 func (uc *acompanhamentoUseCase) AtualizarStatusPedido(c context.Context, acompanhamentoID string, identificacao string, novoStatus entities.StatusPedido) error {
-	acompanhamento, err := uc.acompanhamentoRepo.BuscarAcompanhamento(c, acompanhamentoID)
-	if err != nil {
-		return err
-	}
+	fmt.Printf("UseCase: Atualizando pedido %s no acompanhamento %s para status %s\n",
+		identificacao, acompanhamentoID, novoStatus)
 
-	pedidos := acompanhamento.Pedidos.Listar()
-	updated := false
-
-	for i, pedido := range pedidos {
-		if pedido.Identificacao == identificacao {
-			// Update the status
-			pedido.Status = novoStatus
-			pedido.UltimaAtualizacao = time.Now()
-
-			// If status is "Finalizado", remove from queue
-			if novoStatus == entities.Finalizado {
-				acompanhamento.Pedidos.RemoverPedido(identificacao)
-			} else {
-				// Otherwise update the pedido in the queue
-				pedidos[i] = pedido
-			}
-
-			acompanhamento.UltimaAtualizacao = time.Now()
-			updated = true
-			break
-		}
-	}
-
-	if !updated {
-		return nil // Or return an error indicating the pedido wasn't found
-	}
-
-	// We would need to save the updated acompanhamento
-	// This would require an additional method in the repository
-	// For now, we'll assume it's handled elsewhere
-
-	return nil
+	return uc.acompanhamentoRepo.AtualizarStatusPedido(c, acompanhamentoID, identificacao, novoStatus)
 }

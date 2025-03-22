@@ -18,7 +18,6 @@ import (
 func main() {
 	ginEngine := gin.Default()
 
-	// Configurar CORS para aceitar todas as origens
 	ginEngine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

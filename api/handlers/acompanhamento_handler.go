@@ -95,7 +95,6 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(a *gin.Context) {
 	idAcompanhamento := a.Param("IDAcompanhamento")
 	idPedido := a.Param("IDPedido")
 
-	// Criar um objeto Pedido apenas com o ID
 	pedido := &entities.Pedido{
 		Identificacao: idPedido,
 	}
@@ -137,7 +136,6 @@ func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
 		}
 	}
 
-	// Use the presenter to format the response
 	acompanhamentoDto := presenters.NewAcompanhamentoDTO(&acompanhamento)
 	c.JSON(http.StatusOK, acompanhamentoDto)
 }
@@ -155,26 +153,20 @@ func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) AtualizarStatusPedido(a *gin.Context) {
+	idAcompanhamento := a.Param("IDAcompanhamento")
 	idPedido := a.Param("IDPedido")
 	status := a.Param("status")
+
+	fmt.Printf("Parâmetros recebidos: IDAcompanhamento=%s, IDPedido=%s, status=%s\n",
+		idAcompanhamento, idPedido, status)
+
 	err := ah.PedidoAtualizarStatusUseCase.Run(a, idPedido, status)
-
-	idAcompanhamento := a.Param("IDAcompanhamento")
-
 	if err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	// Get the acompanhamento
-	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(a, idAcompanhamento)
-	if err != nil {
-		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	// Update the status
-	err = ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, acompanhamento.ID, idPedido, entities.StatusPedido(status))
+	err = ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, idAcompanhamento, idPedido, entities.StatusPedido(status))
 	if err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return

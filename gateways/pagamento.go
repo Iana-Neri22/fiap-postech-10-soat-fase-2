@@ -24,19 +24,15 @@ type pagamentoRepository struct {
 }
 
 func NewPagamentoRepository(db mongo.Database, collection string) repository.PagamentoRepository {
-	// Initialize the Redis client
 	redisAddress := os.Getenv("REDIS_ADDRESS")
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     redisAddress, // Redis server address
-		Password: "",          // No password
-		DB:       0,           // Default DB
+		Addr:     redisAddress,
+		Password: "",
+		DB:       0,
 	})
 
-	// Ping Redis to check the connection
-	//ctx := context.Background()
 	_, err := redisClient.Ping().Result()
 	if err != nil {
-		//panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
 		fmt.Printf("Failed to connect to Redis: %v\n", err)
 	}
 
@@ -48,7 +44,6 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 }
 
 func (pg *pagamentoRepository) ConfirmarPagamento(c context.Context, pagamento *entities.Pagamento) error {
-	// Implement the logic here
 	return nil
 }
 
@@ -79,7 +74,6 @@ func (pg *pagamentoRepository) EnviarPagamento(c context.Context, pagamento *ent
 	return nil
 }
 
-// RegisterPaymentRoutes registers the HTTP routes for payments.
 func RegisterPaymentRoutes(redisClient *redis.Client) {
 	http.HandleFunc("/payment", func(w http.ResponseWriter, r *http.Request) {
 		paymentData := getPayment()

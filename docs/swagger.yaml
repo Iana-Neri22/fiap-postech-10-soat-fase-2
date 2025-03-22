@@ -55,7 +55,7 @@ definitions:
       cliente:
         $ref: '#/definitions/entities.Cliente'
       identificacao:
-        description: <<<<<<< HEAD
+        description:
         type: string
       personalizacao:
         type: string

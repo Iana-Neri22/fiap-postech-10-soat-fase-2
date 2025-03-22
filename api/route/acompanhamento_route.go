@@ -22,7 +22,6 @@ func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.
 		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
 	}
 
-	// Debug print to confirm route registration
 	fmt.Printf("Registrando rotas do acompanhamento\n")
 
 	router.POST("/acompanhamento", auc.CriarAcompanhamento)

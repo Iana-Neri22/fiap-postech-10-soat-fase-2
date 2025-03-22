@@ -59,7 +59,6 @@ func (ph *PagamentoHandler) EnviarPagamento(c *gin.Context) {
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (ph *PagamentoHandler) ConfirmarPagamento(c *gin.Context) {
-	// Read the request body
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Failed to read request body: " + err.Error()})
@@ -67,26 +66,21 @@ func (ph *PagamentoHandler) ConfirmarPagamento(c *gin.Context) {
 	}
 	defer c.Request.Body.Close()
 
-	// Print the raw request body
 	fmt.Println("Received webhook data:", string(body))
 
-	// Bind the request body to the pagamento struct
 	var pagamento entities.Pagamento
 	if err := json.Unmarshal(body, &pagamento); err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Failed to unmarshal request body: " + err.Error()})
 		return
 	}
 
-	// Print the parsed pagamento struct
 	fmt.Printf("Parsed pagamento: %+v\n", pagamento)
 
-	// Call the use case to confirm the payment
 	if err := ph.ConfirmarPagamentoUseCase.ConfirmarPagamento(c, &pagamento); err != nil {
 		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	// Return a success response
 	c.JSON(http.StatusOK, response.SuccessResponse{
 		Message: "Pagamento confirmado com sucesso",
 	})

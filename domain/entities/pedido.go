@@ -18,7 +18,6 @@ const (
 )
 
 type Pedido struct {
-// <<<<<<< HEAD
 	Identificacao     string			`json:"identificacao"`
 	Cliente			  Cliente			`json:"cliente"`	
 	Produtos          []Produto			`json:"produtos"`
@@ -27,16 +26,6 @@ type Pedido struct {
 	TimeStamp         time.Time			`json:"timeStamp" format:"date-time"`
 	UltimaAtualizacao time.Time			`json:"ultimaAtualizacao" format:"date-time"`
 	Total             float32			`json:"total"`
-// =======
-// 	Identificacao     string
-// 	Cliente           Cliente
-// 	Produtos          []Produto
-// 	Personalizacao    string
-// 	Status            StatusPedido
-// 	TimeStamp         string
-// 	UltimaAtualizacao string
-// 	Total             float32
-// >>>>>>> Bruno
 }
 
 func PedidoNew(cliente Cliente, produtos []Produto, personalizacao string) (*Pedido, error) {

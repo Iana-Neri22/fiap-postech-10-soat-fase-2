@@ -69,10 +69,6 @@ type mongoCursor struct {
 	mc *mongo.Cursor
 }
 
-// func (mc *mongoClient) ListCollections(ctx context.Context, filter interface{}) ([]string, error) {
-// 	return mc.cl.ListDatabaseNames(ctx, filter)
-// }
-
 type mongoSession struct {
 	mongo.Session
 }
@@ -93,7 +89,6 @@ func (d *nullawareDecoder) DecodeValue(dctx bsoncodec.DecodeContext, vr bsonrw.V
 	if err := vr.ReadNull(); err != nil {
 		return err
 	}
-	// Set the zero value of val's type:
 	val.Set(d.zeroValue)
 	return nil
 }
