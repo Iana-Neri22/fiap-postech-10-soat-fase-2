@@ -29,8 +29,8 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 	redisAddress := os.Getenv("REDIS_ADDRESS")
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     redisAddress, // Redis server address
-		Password: "",          // No password
-		DB:       0,           // Default DB
+		Password: "",           // No password
+		DB:       0,            // Default DB
 	})
 
 	// Ping Redis to check the connection
@@ -51,7 +51,7 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 func (pg *pagamentoRepository) ConfirmarPagamento(ctx context.Context, pagamento *entities.Pagamento) error {
 	filter := bson.M{"identificacao": pagamento.IdPagamento}
 
-	update := bson.M{"$set": bson.M{"status": pagamento.Status}}
+	update := bson.M{"$set": bson.M{"statusPagamento": pagamento.Status}}
 
 	result, err := pg.database.Collection("pedido").UpdateOne(ctx, filter, update)
 	if err != nil {
@@ -69,7 +69,7 @@ func (pg *pagamentoRepository) ConfirmarPagamento(ctx context.Context, pagamento
 func (pg *pagamentoRepository) EnviarPagamento(c context.Context, pagamento *entities.Pagamento) error {
 
 	paymentData := map[string]interface{}{
-		"url": "http://host.docker.internal:8080/pagamento/confirmar",
+		"url":       "http://host.docker.internal:8080/pagamento/confirmar",
 		"webhookId": uuid.New().String(),
 		"data": map[string]interface{}{
 			"idPagamento": pagamento.IdPagamento,
