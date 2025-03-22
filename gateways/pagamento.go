@@ -15,6 +15,7 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type pagamentoRepository struct {
@@ -47,8 +48,21 @@ func NewPagamentoRepository(db mongo.Database, collection string) repository.Pag
 	}
 }
 
-func (pg *pagamentoRepository) ConfirmarPagamento(c context.Context, pagamento *entities.Pagamento) error {
-	// Implement the logic here
+func (pg *pagamentoRepository) ConfirmarPagamento(ctx context.Context, pagamento *entities.Pagamento) error {
+	filter := bson.M{"identificacao": pagamento.IdPagamento}
+
+	update := bson.M{"$set": bson.M{"status": pagamento.Status}}
+
+	result, err := pg.database.Collection("pedido").UpdateOne(ctx, filter, update)
+	if err != nil {
+		return fmt.Errorf("failed to update pedido status: %v", err)
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("no pedido found with idPedido: %s", pagamento.IdPagamento)
+	}
+
+	fmt.Printf("Pedido %s status updated to %s\n", pagamento.IdPagamento, pagamento.Status)
 	return nil
 }
 
