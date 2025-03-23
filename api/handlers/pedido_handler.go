@@ -58,14 +58,14 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 			return
 		}
 	}
-	_, err = h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
+	ped_ret, err := h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	r.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Pedido criado com sucesso",
+		Message: "Pedido criado com sucesso" + ped_ret.Identificacao,
 	})
 }
 
