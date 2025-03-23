@@ -64,7 +64,6 @@ func PedidoNew(cliente Cliente, produtos []Produto, personalizacao string) (*Ped
 		Produtos:          produtos,
 		Personalizacao:    personalizacao,
 		Status:            Pendente,
-		StatusPagamento:   "Pendente",
 		TimeStamp:         agora,
 		UltimaAtualizacao: agora,
 		Total:             total,
