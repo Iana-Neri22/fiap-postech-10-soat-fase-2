@@ -23,7 +23,7 @@ type Pedido struct {
 	Produtos          []Produto
 	Personalizacao    string
 	Status            StatusPedido
-	StatusPagamento   string
+	IDPagamento       string
 	TimeStamp         string
 	UltimaAtualizacao string
 	Total             float32
