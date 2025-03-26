@@ -96,3 +96,12 @@ func (pd *ProdutoGateway) ListarPorCategoria(c context.Context, categoria string
 
 	return produtos, nil
 }
+
+func (pd *ProdutoGateway) ProdutoBuscarPorNome(c context.Context, nome string) (*entities.Produto, error) {
+	collection := pd.database.Collection(pd.collection)
+
+	var produto *entities.Produto
+
+	err := collection.FindOne(c, bson.M{"nome": nome}).Decode(&produto)
+	return produto, err
+}

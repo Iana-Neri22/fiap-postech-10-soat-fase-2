@@ -116,10 +116,18 @@ definitions:
     type: object
   presenters.PedidoDTO:
     properties:
+      clienteCPF:
+        type: string
       id:
         type: string
       identificacao:
         type: string
+      personalizacao:
+        type: string
+      produtos:
+        items:
+          type: string
+        type: array
       status:
         $ref: '#/definitions/entities.StatusPedido'
       tempoEstimado:
@@ -425,7 +433,7 @@ paths:
         name: pedido
         required: true
         schema:
-          $ref: '#/definitions/entities.Pedido'
+          $ref: '#/definitions/presenters.PedidoDTO'
       produces:
       - application/json
       responses:
@@ -524,7 +532,7 @@ paths:
       parameters:
       - description: Produto
         in: body
-        name: cliente
+        name: produto
         required: true
         schema:
           $ref: '#/definitions/entities.Produto'

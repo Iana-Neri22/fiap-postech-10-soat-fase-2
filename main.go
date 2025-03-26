@@ -3,7 +3,8 @@ package main
 import (
 	route "lanchonete/api/route"
 	"lanchonete/bootstrap"
-	_"lanchonete/docs"
+	_ "lanchonete/docs"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -14,8 +15,10 @@ import (
 
 // @host localhost:8080
 // @BasePath /
+//
 //go:generate go run github.com/swaggo/swag/cmd/swag@latest init
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	ginEngine := gin.Default()
 
 	ginEngine.Use(cors.New(cors.Config{
@@ -33,6 +36,7 @@ func main() {
 	db := app.Mongo.Database(env.DBName)
 	defer app.CloseDBConnection()
 
+	//gin.SetMode(gin.ReleaseMode)
 	route.Setup(env, db, ginEngine)
 
 	ginEngine.Run(env.ServerAddress)

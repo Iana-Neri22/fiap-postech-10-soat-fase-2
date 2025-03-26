@@ -418,7 +418,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entities.Pedido"
+                            "$ref": "#/definitions/presenters.PedidoDTO"
                         }
                     }
                 ],
@@ -569,7 +569,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Produto",
-                        "name": "cliente",
+                        "name": "produto",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -951,11 +951,23 @@ const docTemplate = `{
         "presenters.PedidoDTO": {
             "type": "object",
             "properties": {
+                "clienteCPF": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "identificacao": {
                     "type": "string"
+                },
+                "personalizacao": {
+                    "type": "string"
+                },
+                "produtos": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "status": {
                     "$ref": "#/definitions/entities.StatusPedido"

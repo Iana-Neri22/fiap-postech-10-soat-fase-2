@@ -12,4 +12,5 @@ type ProdutoRepository interface {
 	EditarProduto(c context.Context, produto *entities.Produto) error
 	RemoverProduto(c context.Context, identificacao string) error
 	ListarPorCategoria(c context.Context, categoria string) ([]*entities.Produto, error)
+	ProdutoBuscarPorNome(c context.Context, nome string) (*entities.Produto, error)
 }

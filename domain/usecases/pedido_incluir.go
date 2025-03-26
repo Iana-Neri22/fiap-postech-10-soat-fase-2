@@ -16,14 +16,14 @@ func NewPedidoIncluirUseCase(pedidoRepository repository.PedidoRepository) *Pedi
 	}
 }
 
-func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto, personalizacao string) (*entities.Pedido, error) {
+func (pduc *PedidoIncluirUseCase) Run(c context.Context, cliente entities.Cliente, produtos []entities.Produto, personalizacao string) (string, error) {
 	pedido, err := entities.PedidoNew(cliente, produtos, personalizacao)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	err = pduc.pedidoRepository.CriarPedido(c, pedido)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return pedido, nil
+	return pedido.Identificacao, nil
 }

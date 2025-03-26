@@ -5,6 +5,7 @@ import (
 	_ "lanchonete/docs"
 	response "lanchonete/domain/responses"
 	"lanchonete/domain/usecases"
+	"lanchonete/presenters"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,21 +15,24 @@ type PedidoHandler struct {
 	PedidoIncluirUseCase         usecases.PedidoIncluirUseCase
 	PedidoBuscarPorIdUseCase     usecases.PedidoBuscarPorIdUseCase
 	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
-	ProdutoBuscarPorIdUseCase    usecases.ProdutoBuscaPorIdUseCase
+	ProdutoBuscarPorNomeUseCase  usecases.ProdutoBuscaPorNomeUseCase
 	PedidoListarTodosUseCase     usecases.PedidoListarTodosUseCase
+	ClienteUseCase               usecases.ClienteUseCase
 }
 
 func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase,
 	pedidoBuscarPorIdUseCase usecases.PedidoBuscarPorIdUseCase,
 	pedidoAtualizarStatusUsecase usecases.PedidoAtualizarStatusUseCase,
-	produtoBuscarPorIdUseCase usecases.ProdutoBuscaPorIdUseCase,
-	pedidoListarTodosUseCase usecases.PedidoListarTodosUseCase) *PedidoHandler {
+	produtoBuscarPorNomeUseCase usecases.ProdutoBuscaPorNomeUseCase,
+	pedidoListarTodosUseCase usecases.PedidoListarTodosUseCase,
+	clienteUseCase usecases.ClienteUseCase) *PedidoHandler {
 	return &PedidoHandler{
 		PedidoIncluirUseCase:         pedidoIncluirUseCase,
 		PedidoBuscarPorIdUseCase:     pedidoBuscarPorIdUseCase,
 		PedidoAtualizarStatusUseCase: pedidoAtualizarStatusUsecase,
-		ProdutoBuscarPorIdUseCase:    produtoBuscarPorIdUseCase,
+		ProdutoBuscarPorNomeUseCase:  produtoBuscarPorNomeUseCase,
 		PedidoListarTodosUseCase:     pedidoListarTodosUseCase,
+		ClienteUseCase:               clienteUseCase,
 	}
 }
 
@@ -39,32 +43,41 @@ func NewPedidoHandler(pedidoIncluirUseCase usecases.PedidoIncluirUseCase,
 // @Router /pedidos [post]
 // @Accept  json
 // @Produce  json
-// @Param pedido body entities.Pedido true "Pedido"
+// @Param pedido body presenters.PedidoDTO true "Pedido"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
 func (h *PedidoHandler) CriarPedido(r *gin.Context) {
-	var pedido entities.Pedido
-	err := json.NewDecoder(r.Request.Body).Decode(&pedido)
+	var pedidoDTO presenters.PedidoDTO
+	var produtoDTO presenters.ProdutoDTO
+	var produtosDTO presenters.ProdutoDTOs
+	err := json.NewDecoder(r.Request.Body).Decode(&pedidoDTO)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	for _, produto := range pedido.Produtos {
-		_, err = h.ProdutoBuscarPorIdUseCase.Run(r, produto.Identificacao)
+	for _, nomeProduto := range pedidoDTO.Produtos {
+		produto, err := h.ProdutoBuscarPorNomeUseCase.Run(r, nomeProduto)
 		if err != nil {
 			r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Produto não Cadastrado!"})
 			return
 		}
+		produtoDTO.ToDTO(produto)
+		produtosDTO = append(produtosDTO, produtoDTO)
 	}
-	ped_ret, err := h.PedidoIncluirUseCase.Run(r, pedido.Cliente, pedido.Produtos, pedido.Personalizacao)
+	produtos := produtosDTO.ConvertProdutoDTOsToEntities()
+	cliente, err := h.ClienteUseCase.BuscarCliente(r, pedidoDTO.ClienteCPF)
+	if err != nil {
+		println("cliente não cadastrado: %w", err)
+	}
+	pedidoID, err := h.PedidoIncluirUseCase.Run(r, cliente, produtos, pedidoDTO.Personalizacao)
 	if err != nil {
 		r.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	r.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Pedido criado com sucesso" + ped_ret.Identificacao,
+		Message: "Pedido criado com sucesso: " + pedidoID,
 	})
 }
 
