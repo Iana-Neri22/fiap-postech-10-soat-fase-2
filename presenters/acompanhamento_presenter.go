@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-type PedidoDTO struct {
-	ID            string                `json:"id"`
-	Identificacao string                `json:"identificacao"`
-	Status        entities.StatusPedido `json:"status"`
-	TempoEstimado time.Duration         `json:"tempoEstimado"`
-}
-
 type AcompanhamentoDTO struct {
 	ID            string      `json:"id"`
 	Pedidos       []PedidoDTO `json:"pedidos"`

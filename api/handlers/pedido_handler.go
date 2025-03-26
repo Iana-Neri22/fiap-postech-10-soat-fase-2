@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	_ "lanchonete/docs"
-	"lanchonete/domain/entities"
 	response "lanchonete/domain/responses"
 	"lanchonete/domain/usecases"
 	"net/http"

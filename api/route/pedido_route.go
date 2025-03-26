@@ -18,7 +18,6 @@ func NewPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGr
 		PedidoIncluirUseCase:         *usecases.NewPedidoIncluirUseCase(pr),
 		PedidoBuscarPorIdUseCase:     *usecases.NewPedidoBuscarPorIdUseCase(pr),
 		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
-		ProdutoBuscarPorIdUseCase:    *usecases.NewProdutoBuscaPorIdUseCase(prod),
 		PedidoListarTodosUseCase:     *usecases.NewPedidoListarTodosUseCase(pr),
 	}
 
