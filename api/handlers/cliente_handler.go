@@ -5,7 +5,7 @@ import (
 	_"lanchonete/docs"
 	"lanchonete/domain/usecases"
 	"lanchonete/domain/entities"
-	"lanchonete/domain/responses"
+	"lanchonete/responses"
 	
 	"github.com/gin-gonic/gin"
 )

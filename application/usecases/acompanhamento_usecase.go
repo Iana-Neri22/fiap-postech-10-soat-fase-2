@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"lanchonete/domain/entities"
 	"lanchonete/domain/repository"
-	service "lanchonete/domain/services"
+	service "lanchonete/services"
 )
 
 type acompanhamentoUseCase struct {
