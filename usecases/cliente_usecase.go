@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"context"
-	"lanchonete/domain/entities"
+	"lanchonete/internal/domain/entities"
 )
 
 type ClienteUseCase interface {

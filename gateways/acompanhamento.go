@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"lanchonete/domain/entities"
-	"lanchonete/domain/repository"
+	"lanchonete/internal/domain/entities"
+	"lanchonete/internal/domain/repository"
 	"lanchonete/infra/database/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"

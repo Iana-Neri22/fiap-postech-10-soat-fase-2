@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"lanchonete/domain/entities"
-	"lanchonete/domain/repository"
+	"lanchonete/internal/domain/entities"
+	"lanchonete/internal/domain/repository"
 	"lanchonete/infra/database/mongo"
 
 	"github.com/go-redis/redis"

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"lanchonete/domain/entities"
+	"lanchonete/internal/domain/entities"
 )
 
 type PedidoRepository interface {

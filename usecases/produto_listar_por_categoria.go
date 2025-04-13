@@ -3,8 +3,8 @@ package usecases
 import (
 	"context"
 	"fmt"
-	"lanchonete/domain/entities"
-	"lanchonete/domain/repository"
+	"lanchonete/internal/domain/entities"
+	"lanchonete/internal/domain/repository"
 )
 
 type ProdutoListarPorCategoriaUseCase struct {

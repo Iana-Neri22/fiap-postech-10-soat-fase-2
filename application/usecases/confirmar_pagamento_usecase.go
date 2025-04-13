@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"lanchonete/domain/entities"
-	"lanchonete/domain/repository"
-	"lanchonete/domain/usecases"
+	"lanchonete/internal/domain/entities"
+	"lanchonete/internal/domain/repository"
+	"lanchonete/usecases"
 )
 
 type confirmarPagamentoUseCase struct {

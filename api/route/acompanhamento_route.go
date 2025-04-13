@@ -4,7 +4,7 @@ import (
 	handler "lanchonete/api/handlers"
 	usecase "lanchonete/application/usecases"
 	"lanchonete/bootstrap"
-	"lanchonete/domain/usecases"
+	"lanchonete/usecases"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
 

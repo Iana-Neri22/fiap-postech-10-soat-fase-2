@@ -3,7 +3,7 @@ package route
 import (
 	handler "lanchonete/api/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/domain/usecases"
+	"lanchonete/usecases"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
 

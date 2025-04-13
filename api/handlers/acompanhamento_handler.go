@@ -3,10 +3,10 @@ package handler
 import (
 	"fmt"
 	_ "lanchonete/docs"
-	"lanchonete/domain/entities"
+	"lanchonete/internal/domain/entities"
 	response "lanchonete/responses"
 	service "lanchonete/services"
-	"lanchonete/domain/usecases"
+	"lanchonete/usecases"
 	"lanchonete/presenters"
 	"net/http"
 

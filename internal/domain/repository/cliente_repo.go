@@ -1,7 +1,9 @@
 package repository
 
-import "context"
-import "lanchonete/domain/entities"
+import (
+	"context"
+	"lanchonete/internal/domain/entities"
+)
 
 type ClienteRepository interface {
 	CriarCliente(c context.Context, cliente *entities.Cliente) error

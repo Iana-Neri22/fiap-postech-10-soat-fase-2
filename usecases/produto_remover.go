@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 	"fmt"
-	"lanchonete/domain/repository"
+	"lanchonete/internal/domain/repository"
 )
 
 type ProdutoRemoverUseCase struct {

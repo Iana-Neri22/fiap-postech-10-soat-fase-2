@@ -3,9 +3,9 @@ package handler
 import (
 	"encoding/json"
 	_ "lanchonete/docs"
-	"lanchonete/domain/entities"
+	"lanchonete/internal/domain/entities"
 	response "lanchonete/responses"
-	"lanchonete/domain/usecases"
+	"lanchonete/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

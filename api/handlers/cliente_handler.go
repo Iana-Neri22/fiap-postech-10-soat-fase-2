@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 	_"lanchonete/docs"
-	"lanchonete/domain/usecases"
-	"lanchonete/domain/entities"
+	"lanchonete/usecases"
+	"lanchonete/internal/domain/entities"
 	"lanchonete/responses"
 	
 	"github.com/gin-gonic/gin"

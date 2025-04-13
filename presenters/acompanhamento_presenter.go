@@ -1,7 +1,7 @@
 package presenters
 
 import (
-	"lanchonete/domain/entities"
+	"lanchonete/internal/domain/entities"
 	"time"
 )
 
