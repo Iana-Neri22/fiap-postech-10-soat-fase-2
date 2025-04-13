@@ -7,7 +7,7 @@ import (
 	response "lanchonete/responses"
 	service "lanchonete/services"
 	"lanchonete/usecases"
-	"lanchonete/presenters"
+	"lanchonete/internal/application/presenters"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

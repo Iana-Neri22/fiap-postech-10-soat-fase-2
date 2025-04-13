@@ -1,7 +1,7 @@
 package route
 
 import (
-	handler "lanchonete/api/handlers"
+	handler "lanchonete/internal/interfaces/handlers"
 	"lanchonete/bootstrap"
 	"lanchonete/usecases"
 	"lanchonete/gateways"

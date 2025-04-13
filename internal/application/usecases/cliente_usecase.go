@@ -21,6 +21,6 @@ func (uc *clienteUseCase) CriarCliente(c context.Context, cliente *entities.Clie
 	return uc.clienteRepository.CriarCliente(c, cliente)
 }
 
-func (uc *clienteUseCase) BuscarCliente(c context.Context, CPF string) (entities.Cliente, error) {
+func (uc *clienteUseCase) BuscarCliente(c context.Context, CPF string) (*entities.Cliente, error) {
 	return uc.clienteRepository.BuscarCliente(c, CPF)
 }

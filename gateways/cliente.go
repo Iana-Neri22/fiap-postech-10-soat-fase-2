@@ -31,10 +31,10 @@ func (cr *clienteRepository) CriarCliente(c context.Context, cliente *entities.C
 	return err
 }
 
-func (cr *clienteRepository) BuscarCliente(c context.Context, CPF string) (entities.Cliente, error) {
+func (cr *clienteRepository) BuscarCliente(c context.Context, CPF string) (*entities.Cliente, error) {
 	collection := cr.database.Collection(cr.collection)
 
-	var cliente entities.Cliente
+	var cliente *entities.Cliente
 
 	err := collection.FindOne(c, bson.M{"cpf": CPF}).Decode(&cliente)
 	return cliente, err

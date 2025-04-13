@@ -5,6 +5,7 @@ import (
 	_"lanchonete/docs"
 	"lanchonete/usecases"
 	"lanchonete/internal/domain/entities"
+	"lanchonete/internal/application/presenters"
 	"lanchonete/responses"
 	
 	"github.com/gin-gonic/gin"
@@ -52,9 +53,10 @@ func (cc *ClienteHandler) CriarCliente(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param CPF path string true "CPF do cliente"
-// @Success 200 {object} entities.Cliente
+// @Success 200 {object} presenters.ClienteDTO
 // @Failure 400 {object} response.ErrorResponse
 func (cc *ClienteHandler) BuscarCliente(c *gin.Context) {
+
 	CPF := c.Param("CPF")
 	cliente, err := cc.ClienteUseCase.BuscarCliente(c, CPF)
 	if err != nil {
@@ -62,5 +64,6 @@ func (cc *ClienteHandler) BuscarCliente(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, cliente)
+	clienteDTO := presenters.NewClienteDTO(cliente)
+	c.JSON(http.StatusOK, clienteDTO)
 }

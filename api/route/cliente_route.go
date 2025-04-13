@@ -1,11 +1,11 @@
 package route
 
 import (
-	"lanchonete/api/handlers"
+	handler "lanchonete/internal/interfaces/handlers"
 	"lanchonete/bootstrap"
 	"lanchonete/infra/database/mongo"
 	"lanchonete/gateways"
-	"lanchonete/application/usecases"
+	"lanchonete/internal/application/usecases"
 
 	"github.com/gin-gonic/gin"
 )
