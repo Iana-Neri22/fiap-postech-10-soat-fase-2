@@ -2,6 +2,7 @@ package handler
 
 import (
 	_ "lanchonete/docs"
+	"lanchonete/internal/application/presenters"
 	"lanchonete/internal/domain/entities"
 	response "lanchonete/responses"
 	"lanchonete/usecases"
@@ -72,7 +73,7 @@ func (ph *ProdutoHandler) ProdutoIncluir(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "id do produto"
-// @Success 200 {object} entities.Produto
+// @Success 200 {object} presenters.ProdutoDTO
 // @Failure 400 {object} response.ErrorResponse
 func (ph *ProdutoHandler) ProdutoBuscarPorId(c *gin.Context) {
 	id := c.Param("id")
@@ -83,7 +84,9 @@ func (ph *ProdutoHandler) ProdutoBuscarPorId(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, prd)
+	prdDTO := presenters.NewProdutoDTO(prd)
+
+	c.JSON(http.StatusOK, prdDTO)
 }
 
 // ProdutoListarTodos godoc
