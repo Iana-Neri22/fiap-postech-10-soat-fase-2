@@ -4,7 +4,7 @@ import (
 	_ "lanchonete/docs"
 	"lanchonete/internal/application/presenters"
 	"lanchonete/internal/domain/entities"
-	response "lanchonete/responses"
+	response "lanchonete/internal/interfaces/http/responses"
 	"lanchonete/usecases"
 	"net/http"
 

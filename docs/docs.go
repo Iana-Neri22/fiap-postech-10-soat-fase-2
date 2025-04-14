@@ -306,7 +306,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entities.Cliente"
+                            "$ref": "#/definitions/presenters.ClienteDTO"
                         }
                     },
                     "400": {
@@ -569,7 +569,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Produto",
-                        "name": "cliente",
+                        "name": "produto",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -659,7 +659,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entities.Produto"
+                            "$ref": "#/definitions/presenters.ProdutoDTO"
                         }
                     },
                     "400": {
@@ -852,7 +852,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "valor": {
-                    "type": "string"
+                    "type": "number"
                 }
             }
         },
@@ -948,6 +948,20 @@ const docTemplate = `{
                 }
             }
         },
+        "presenters.ClienteDTO": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                }
+            }
+        },
         "presenters.PedidoDTO": {
             "type": "object",
             "properties": {
@@ -962,6 +976,26 @@ const docTemplate = `{
                 },
                 "tempoEstimado": {
                     "$ref": "#/definitions/time.Duration"
+                }
+            }
+        },
+        "presenters.ProdutoDTO": {
+            "type": "object",
+            "properties": {
+                "categoria": {
+                    "$ref": "#/definitions/entities.CatProduto"
+                },
+                "descricao": {
+                    "type": "string"
+                },
+                "identificacao": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "preco": {
+                    "type": "number"
                 }
             }
         },

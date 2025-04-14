@@ -48,7 +48,7 @@ definitions:
       status:
         type: string
       valor:
-        type: string
+        type: number
     type: object
   entities.Pedido:
     properties:
@@ -114,6 +114,15 @@ definitions:
         description: in minutes
         type: integer
     type: object
+  presenters.ClienteDTO:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      nome:
+        type: string
+    type: object
   presenters.PedidoDTO:
     properties:
       id:
@@ -124,6 +133,19 @@ definitions:
         $ref: '#/definitions/entities.StatusPedido'
       tempoEstimado:
         $ref: '#/definitions/time.Duration'
+    type: object
+  presenters.ProdutoDTO:
+    properties:
+      categoria:
+        $ref: '#/definitions/entities.CatProduto'
+      descricao:
+        type: string
+      identificacao:
+        type: string
+      nome:
+        type: string
+      preco:
+        type: number
     type: object
   response.ErrorResponse:
     properties:
@@ -354,7 +376,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entities.Cliente'
+            $ref: '#/definitions/presenters.ClienteDTO'
         "400":
           description: Bad Request
           schema:
@@ -524,7 +546,7 @@ paths:
       parameters:
       - description: Produto
         in: body
-        name: cliente
+        name: produto
         required: true
         schema:
           $ref: '#/definitions/entities.Produto'
@@ -583,7 +605,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entities.Produto'
+            $ref: '#/definitions/presenters.ProdutoDTO'
         "400":
           description: Bad Request
           schema:

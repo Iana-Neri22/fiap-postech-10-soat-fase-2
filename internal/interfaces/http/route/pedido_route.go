@@ -1,7 +1,7 @@
 package route
 
 import (
-	handler "lanchonete/internal/interfaces/handlers"
+	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/bootstrap"
 	"lanchonete/usecases"
 	"lanchonete/gateways"
@@ -11,9 +11,8 @@ import (
 )
 
 func NewPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	collection := "pedido"
-	pr := gateways.NewPedidoGateway(db, collection)
-	prod := gateways.NewProdutoGateway(db, "produto")
+	pr := gateways.NewPedidoGateway(db, mongo.CollectionPedido)
+	prod := gateways.NewProdutoGateway(db, mongo.CollectionProduto)
 	puc := &handler.PedidoHandler{
 		PedidoIncluirUseCase:         *usecases.NewPedidoIncluirUseCase(pr),
 		PedidoBuscarPorIdUseCase:     *usecases.NewPedidoBuscarPorIdUseCase(pr),

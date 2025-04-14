@@ -8,7 +8,7 @@ Aplicar as alterações
 
 	swag init 
 
-
+	swag init --parseDependency --parseInternal
 	
 Rodar a aplicação com run go main.go
     

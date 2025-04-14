@@ -6,7 +6,7 @@ import (
 	"lanchonete/usecases"
 	"lanchonete/internal/domain/entities"
 	"lanchonete/internal/application/presenters"
-	"lanchonete/responses"
+	response "lanchonete/internal/interfaces/http/responses"
 	
 	"github.com/gin-gonic/gin"
 )

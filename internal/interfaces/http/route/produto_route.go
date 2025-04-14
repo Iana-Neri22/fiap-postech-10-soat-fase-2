@@ -1,7 +1,7 @@
 package route
 
 import (
-	handler "lanchonete/internal/interfaces/handlers"
+	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/usecases"
 
 	"lanchonete/bootstrap"
@@ -11,9 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// NewProdutoRouter creates and configures all produto-related routes
 func NewProdutoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-
-	pr := gateways.NewProdutoGateway(db, CollectionProduto)
+	pr := gateways.NewProdutoGateway(db, mongo.CollectionProduto)
 	pc := &handler.ProdutoHandler{
 		ProdutoIncluirUseCase:            *usecases.NewProdutoIncluirUseCase(pr),
 		ProdutoBuscarPorIdUseCase:        *usecases.NewProdutoBuscaPorIdUseCase(pr),

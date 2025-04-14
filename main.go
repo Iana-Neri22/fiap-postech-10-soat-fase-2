@@ -1,7 +1,7 @@
 package main
 
 import (
-	route "lanchonete/api/route"
+	"lanchonete/internal/interfaces/http"
 	"lanchonete/bootstrap"
 	_"lanchonete/docs"
 	"github.com/gin-contrib/cors"
@@ -33,7 +33,7 @@ func main() {
 	db := app.Mongo.Database(env.DBName)
 	defer app.CloseDBConnection()
 
-	route.Setup(env, db, ginEngine)
+	http.Setup(env, db, ginEngine)
 
 	ginEngine.Run(env.ServerAddress)
 }

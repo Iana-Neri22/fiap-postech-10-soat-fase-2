@@ -6,7 +6,7 @@ import (
 	"io"
 	_ "lanchonete/docs"
 	"lanchonete/internal/domain/entities"
-	"lanchonete/responses"
+	response "lanchonete/internal/interfaces/http/responses"
 	"lanchonete/usecases"
 	"net/http"
 

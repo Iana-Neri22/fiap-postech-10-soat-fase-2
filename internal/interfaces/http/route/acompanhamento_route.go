@@ -1,24 +1,24 @@
 package route
 
 import (
-	handler "lanchonete/internal/interfaces/handlers"
-	usecase "lanchonete/internal/application/usecases"
+	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/usecases"
 	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
+	appusecases "lanchonete/internal/application/usecases"
+	"lanchonete/usecases"
 
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
+// NewAcompanhamentoRouter creates and configures all acompanhamento-related routes
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-
-	ar := gateways.NewAcompanhamentoRepository(db, CollectionAcompanhamento)
-	pr := gateways.NewPedidoGateway(db, CollectionPedido)
+	ar := gateways.NewAcompanhamentoRepository(db, mongo.CollectionAcompanhamento)
+	pr := gateways.NewPedidoGateway(db, mongo.CollectionPedido)
 	auc := &handler.AcompanhamentoHandler{
-		AcompanhamentoUseCase:        usecase.NewAcompanhamentoUseCase(ar),
+		AcompanhamentoUseCase:        appusecases.NewAcompanhamentoUseCase(ar),
 		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
 	}
 

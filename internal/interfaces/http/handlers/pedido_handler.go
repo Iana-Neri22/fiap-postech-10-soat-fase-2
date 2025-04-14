@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	_ "lanchonete/docs"
 	"lanchonete/internal/domain/entities"
-	response "lanchonete/responses"
+	response "lanchonete/internal/interfaces/http/responses"
 	"lanchonete/usecases"
 	"net/http"
 
