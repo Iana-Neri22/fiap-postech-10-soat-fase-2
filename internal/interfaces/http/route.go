@@ -30,7 +30,7 @@ func (r *Router) Setup() {
 
 	// Core domain routes
 	route.NewClienteRouter(r.env, r.db, r.router)
-	route.NewPedidoRouter(r.env, r.db, r.router)
+	route.NovoPedidoRouter(r.env, r.db, r.router)
 	route.NewProdutoRouter(r.env, r.db, r.router)
 
 	// Supporting domain routes

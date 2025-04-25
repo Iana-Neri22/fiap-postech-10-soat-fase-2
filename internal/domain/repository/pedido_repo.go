@@ -5,6 +5,7 @@ import (
 	"lanchonete/internal/domain/entities"
 )
 
+// PedidoRepository define a interface para operações de dados de pedidos
 type PedidoRepository interface {
 	CriarPedido(c context.Context, pedido *entities.Pedido) error
 	BuscarPedido(c context.Context, identificacao string) (*entities.Pedido, error)
