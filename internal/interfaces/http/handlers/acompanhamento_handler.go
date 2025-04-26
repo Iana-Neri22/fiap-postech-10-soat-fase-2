@@ -4,9 +4,9 @@ import (
 	"fmt"
 	_ "lanchonete/docs"
 	"lanchonete/internal/domain/entities"
-	response "lanchonete/internal/interfaces/http/responses"
-	service "lanchonete/services"
+	"lanchonete/internal/domain/usecase"
 	"lanchonete/usecases"
+	response "lanchonete/internal/interfaces/http/responses"
 	"lanchonete/internal/application/presenters"
 	"net/http"
 
@@ -14,11 +14,11 @@ import (
 )
 
 type AcompanhamentoHandler struct {
-	AcompanhamentoUseCase        service.AcompanhamentoUseCase
+	AcompanhamentoUseCase        usecase.AcompanhamentoUseCase
 	PedidoAtualizarStatusUseCase usecases.PedidoAtualizarStatusUseCase
 }
 
-func NewAcompanhamentoHandler(auc service.AcompanhamentoUseCase, p usecases.PedidoAtualizarStatusUseCase) *AcompanhamentoHandler {
+func NewAcompanhamentoHandler(auc usecase.AcompanhamentoUseCase, p usecases.PedidoAtualizarStatusUseCase) *AcompanhamentoHandler {
 	return &AcompanhamentoHandler{
 		AcompanhamentoUseCase:        auc,
 		PedidoAtualizarStatusUseCase: p,
@@ -64,7 +64,7 @@ func (ah *AcompanhamentoHandler) CriarAcompanhamento(a *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param ID path string true "ID do pedido"
-// @Success 200 {object} entities.AcompanhamentoPedido
+// @Success 200 {object} presenters.PedidoDTO
 // @Failure 400 {object} response.ErrorResponse
 func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 	ID := p.Param("ID")
@@ -75,7 +75,8 @@ func (ah *AcompanhamentoHandler) BuscarPedido(p *gin.Context) {
 		return
 	}
 
-	p.JSON(http.StatusOK, pedido)
+	pedidoDTO := presenters.NewPedidoDTO(&pedido)
+	p.JSON(http.StatusOK, pedidoDTO)
 }
 
 // AdicionarPedido godoc
@@ -100,80 +101,69 @@ func (ah *AcompanhamentoHandler) AdicionarPedido(a *gin.Context) {
 	}
 	err := ah.AcompanhamentoUseCase.AdicionarPedido(a, idAcompanhamento, pedido)
 	if err != nil {
-		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		a.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	a.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Pedido adicionado com sucesso",
+		Message: "Pedido adicionado ao acompanhamento com sucesso",
 	})
 }
 
 // BuscarAcompanhamento godoc
 // @Summary Busca um acompanhamento
-// @Description Busca um acompanhamento
+// @Description Busca um acompanhamento pelo ID
 // @Tags acompanhamento
-// @Router /acompanhamento/show [get]
-// @Accept  json
-// @Produce  json
+// @Router /acompanhamento/{ID} [get]
+// @Accept json
+// @Produce json
 // @Param ID path string true "ID do acompanhamento"
 // @Success 200 {object} presenters.AcompanhamentoDTO
 // @Failure 400 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse "Acompanhamento não encontrado"
 func (ah *AcompanhamentoHandler) BuscarAcompanhamento(c *gin.Context) {
-	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(c, "")
+	ID := c.Param("ID")
+	acompanhamento, err := ah.AcompanhamentoUseCase.BuscarAcompanhamento(c, ID)
 	if err != nil {
-		if err.Error() == "mongo: no documents in result" {
-			newAcompanhamento := entities.AcompanhamentoPedido{}
-			err = ah.AcompanhamentoUseCase.CriarAcompanhamento(c, &newAcompanhamento)
-			if err != nil {
-				c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
-				return
-			}
-			acompanhamento = &newAcompanhamento
-		} else {
-			c.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
-			return
-		}
+		c.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
+		return
 	}
 
-	acompanhamentoDto := presenters.NewAcompanhamentoDTO(acompanhamento)
-	c.JSON(http.StatusOK, acompanhamentoDto)
+	acompanhamentoDTO := presenters.NewAcompanhamentoDTO(acompanhamento)
+	c.JSON(http.StatusOK, acompanhamentoDTO)
 }
 
 // AtualizarStatusPedido godoc
 // @Summary Atualiza o status de um pedido
-// @Description Atualiza o status de um pedido
+// @Description Atualiza o status de um pedido no acompanhamento
 // @Tags acompanhamento
-// @Router /acompanhamento/{IDAcompanhamento}/{IDPedido}/{status} [put]
-// @Accept  json
-// @Produce  json
+// @Router /acompanhamento/{IDAcompanhamento}/pedido/{IDPedido}/status [put]
+// @Accept json
+// @Produce json
 // @Param IDAcompanhamento path string true "ID do acompanhamento"
 // @Param IDPedido path string true "ID do pedido"
-// @Param status path string true "Novo status"
+// @Param status body StatusUpdateRequest true "Novo status do pedido"
 // @Success 200 {object} response.SuccessResponse
 // @Failure 400 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse "Pedido ou acompanhamento não encontrado"
 func (ah *AcompanhamentoHandler) AtualizarStatusPedido(a *gin.Context) {
 	idAcompanhamento := a.Param("IDAcompanhamento")
 	idPedido := a.Param("IDPedido")
-	status := a.Param("status")
 
-	fmt.Printf("Parâmetros recebidos: IDAcompanhamento=%s, IDPedido=%s, status=%s\n",
-		idAcompanhamento, idPedido, status)
-
-	err := ah.PedidoAtualizarStatusUseCase.Run(a, idPedido, status)
-	if err != nil {
+	var statusUpdate StatusUpdateRequest
+	if err := a.ShouldBindJSON(&statusUpdate); err != nil {
 		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	err = ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, idAcompanhamento, idPedido, entities.StatusPedido(status))
+	err := ah.AcompanhamentoUseCase.AtualizarStatusPedido(a, idAcompanhamento, idPedido, entities.StatusPedido(statusUpdate.Status))
 	if err != nil {
-		a.JSON(http.StatusBadRequest, response.ErrorResponse{Message: err.Error()})
+		a.JSON(http.StatusInternalServerError, response.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	a.JSON(http.StatusOK, response.SuccessResponse{
-		Message: "Status atualizado com sucesso",
+		Message: "Status do pedido atualizado com sucesso",
 	})
 }
 

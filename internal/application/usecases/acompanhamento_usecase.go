@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"lanchonete/internal/domain/entities"
 	"lanchonete/internal/domain/repository"
-	service "lanchonete/services"
+	"lanchonete/internal/domain/usecase"
 )
 
 type acompanhamentoUseCase struct {
 	acompanhamentoRepo repository.AcompanhamentoRepository
 }
 
-func NewAcompanhamentoUseCase(acompanhamentoRepo repository.AcompanhamentoRepository) service.AcompanhamentoUseCase {
+func NewAcompanhamentoUseCase(acompanhamentoRepo repository.AcompanhamentoRepository) usecase.AcompanhamentoUseCase {
 	return &acompanhamentoUseCase{
 		acompanhamentoRepo: acompanhamentoRepo,
 	}
@@ -25,6 +25,7 @@ func (uc *acompanhamentoUseCase) CriarAcompanhamento(c context.Context, acompanh
 func (uc *acompanhamentoUseCase) BuscarPedido(c context.Context, ID string) (entities.Pedido, error) {
 	return uc.acompanhamentoRepo.BuscarPedidos(c, ID)
 }
+
 func (uc *acompanhamentoUseCase) AdicionarPedido(c context.Context, acompanhamentoID string, pedido *entities.Pedido) error {
 	acompanhamento := &entities.AcompanhamentoPedido{ID: acompanhamentoID}
 	return uc.acompanhamentoRepo.AdicionarPedido(c, acompanhamento, pedido)
