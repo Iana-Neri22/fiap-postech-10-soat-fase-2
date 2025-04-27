@@ -3,7 +3,7 @@ package route
 import (
 	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/internal/application/usecase"
+	"lanchonete/internal/application/factories"
 	"lanchonete/internal/infrastructure/repository"
 	"lanchonete/infra/database/mongo"
 
@@ -14,7 +14,7 @@ import (
 func NovoPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	// Criar fábricas
 	repositorioFactory := repository.NovoRepositorioFactory(db)
-	casoDeUsoFactory := usecase.NovoCasoDeUsoFactory(repositorioFactory)
+	casoDeUsoFactory := factory.NovoCasoDeUsoFactory(repositorioFactory)
 	
 	// Criar casos de uso
 	pedidoIncluirUseCase := casoDeUsoFactory.CriarPedidoIncluirUseCase()

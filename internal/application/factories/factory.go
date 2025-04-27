@@ -1,4 +1,4 @@
-package usecase
+package factory
 
 import (
 	"lanchonete/internal/infrastructure/repository"
