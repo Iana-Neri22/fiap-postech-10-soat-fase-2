@@ -2,10 +2,8 @@ package main
 
 import (
 	"lanchonete/bootstrap"
-	"lanchonete/internal/interfaces/http"
+	"lanchonete/internal/interfaces/http/server"
 	_"lanchonete/docs"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 )
 
 // @title Lanchonete API - Tech Challenge 2
@@ -20,19 +18,12 @@ func main() {
 	app := bootstrap.App()
 	defer app.CloseDBConnection()
 
-	// Setup HTTP server
-	ginEngine := gin.Default()
-	ginEngine.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
-
-	// Setup routes
-	http.Setup(app.Env, app.Mongo.Database(app.Env.DBName), ginEngine)
+	// Create and configure HTTP server
+	srv := server.NewServer(app.Env, app.Mongo.Database(app.Env.DBName))
+	srv.SetupRoutes()
 
 	// Start server
-	ginEngine.Run(app.Env.ServerAddress)
+	if err := srv.Start(); err != nil {
+		panic(err)
+	}
 }
