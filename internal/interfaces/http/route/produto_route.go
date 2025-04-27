@@ -3,24 +3,26 @@ package route
 import (
 	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/usecases"
-
 	"lanchonete/bootstrap"
-	"lanchonete/gateways"
 	"lanchonete/infra/database/mongo"
+	"lanchonete/internal/infrastructure/repository"
 
 	"github.com/gin-gonic/gin"
 )
 
 // NewProdutoRouter creates and configures all produto-related routes
 func NewProdutoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	pr := gateways.NewProdutoGateway(db, mongo.CollectionProduto)
+	// Create repository using the repository factory
+	repositorioFactory := repository.NovoRepositorioFactory(db)
+	produtoRepo := repositorioFactory.CriarProdutoRepository()
+	
 	pc := &handler.ProdutoHandler{
-		ProdutoIncluirUseCase:            *usecases.NewProdutoIncluirUseCase(pr),
-		ProdutoBuscarPorIdUseCase:        *usecases.NewProdutoBuscaPorIdUseCase(pr),
-		ProdutoListarTodosUseCase:        *usecases.NewProdutoListarTodosUseCase(pr),
-		ProdutoEditarUseCase:             *usecases.NewProdutoEditarUseCase(pr),
-		ProdutoRemoverUseCase:            *usecases.NewProdutoRemoverUseCase(pr),
-		ProdutoListarPorCategoriaUseCase: *usecases.NewProdutoListarPorCategoriaUseCase(pr),
+		ProdutoIncluirUseCase:            *usecases.NewProdutoIncluirUseCase(produtoRepo),
+		ProdutoBuscarPorIdUseCase:        *usecases.NewProdutoBuscaPorIdUseCase(produtoRepo),
+		ProdutoListarTodosUseCase:        *usecases.NewProdutoListarTodosUseCase(produtoRepo),
+		ProdutoEditarUseCase:             *usecases.NewProdutoEditarUseCase(produtoRepo),
+		ProdutoRemoverUseCase:            *usecases.NewProdutoRemoverUseCase(produtoRepo),
+		ProdutoListarPorCategoriaUseCase: *usecases.NewProdutoListarPorCategoriaUseCase(produtoRepo),
 	}
 
 	router.POST("/produto", pc.ProdutoIncluir)

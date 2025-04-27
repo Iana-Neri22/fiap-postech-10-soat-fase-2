@@ -3,8 +3,8 @@ package route
 import (
 	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/bootstrap"
+	"lanchonete/internal/infrastructure/repository"
 	"lanchonete/infra/database/mongo"
-	"lanchonete/gateways"
 	"lanchonete/internal/application/usecases"
 
 	"github.com/gin-gonic/gin"
@@ -12,9 +12,14 @@ import (
 
 // NewClienteRouter creates and configures all cliente-related routes
 func NewClienteRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	cr := gateways.NewClienteRepository(db, mongo.CollectionCliente)
+	// Criar fábricas
+	repositorioFactory := repository.NovoRepositorioFactory(db)
+	
+	// Criar casos de uso
+	clienteUseCase := usecases.NewClienteUseCase(repositorioFactory.CriarClienteRepository())
+	
 	cc := &handler.ClienteHandler{
-		ClienteUseCase: usecases.NewClienteUseCase(cr),
+		ClienteUseCase: clienteUseCase,
 	}
 
 	router.GET("/cliente/:CPF", cc.BuscarCliente)

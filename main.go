@@ -1,6 +1,12 @@
 package main
 
 import (
+	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"lanchonete/bootstrap"
 	"lanchonete/internal/interfaces/http/server"
 	_"lanchonete/docs"
@@ -14,16 +20,32 @@ import (
 // @BasePath /
 //go:generate go run github.com/swaggo/swag/cmd/swag@latest init
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	// Initialize application
-	app := bootstrap.App()
-	defer app.CloseDBConnection()
+	app, err := bootstrap.NewApp(ctx)
+	if err != nil {
+		log.Fatalf("Failed to initialize application: %v", err)
+	}
 
 	// Create and configure HTTP server
-	srv := server.NewServer(app.Env, app.Mongo.Database(app.Env.DBName))
+	srv := server.NewServer(app.Env, app.DB)
 	srv.SetupRoutes()
 
-	// Start server
-	if err := srv.Start(); err != nil {
-		panic(err)
-	}
+	// Start server in a goroutine
+	go func() {
+		if err := srv.Start(); err != nil {
+			log.Printf("Server error: %v", err)
+			cancel()
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shut down the server
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutting down server...")
+	// Perform any cleanup here if needed
 }

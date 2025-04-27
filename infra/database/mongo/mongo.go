@@ -15,7 +15,7 @@ import (
 )
 
 type Database interface {
-	Collection(string) Collection
+	Collection(name string) Collection
 	Client() Client
 }
 

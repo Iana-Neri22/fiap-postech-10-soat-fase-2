@@ -3,10 +3,10 @@ package route
 import (
 	handler "lanchonete/internal/interfaces/http/handlers"
 	"lanchonete/bootstrap"
-	"lanchonete/gateways"
+	"lanchonete/internal/application/factories"
+	"lanchonete/internal/infrastructure/repository"
 	"lanchonete/infra/database/mongo"
 	appusecases "lanchonete/internal/application/usecases"
-	"lanchonete/usecases"
 
 	"fmt"
 
@@ -15,11 +15,17 @@ import (
 
 // NewAcompanhamentoRouter creates and configures all acompanhamento-related routes
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
-	ar := gateways.NewAcompanhamentoRepository(db, mongo.CollectionAcompanhamento)
-	pr := gateways.NewPedidoGateway(db, mongo.CollectionPedido)
+	// Criar fábricas
+	repositorioFactory := repository.NovoRepositorioFactory(db)
+	casoDeUsoFactory := factory.NovoCasoDeUsoFactory(repositorioFactory)
+	
+	// Criar casos de uso
+	acompanhamentoUseCase := appusecases.NewAcompanhamentoUseCase(repositorioFactory.CriarAcompanhamentoRepository())
+	pedidoAtualizarStatusUseCase := casoDeUsoFactory.CriarPedidoAtualizarStatusUseCase()
+	
 	auc := &handler.AcompanhamentoHandler{
-		AcompanhamentoUseCase:        appusecases.NewAcompanhamentoUseCase(ar),
-		PedidoAtualizarStatusUseCase: *usecases.NewPedidoAtualizarStatusUseCase(pr),
+		AcompanhamentoUseCase:        acompanhamentoUseCase,
+		PedidoAtualizarStatusUseCase: *pedidoAtualizarStatusUseCase,
 	}
 
 	fmt.Printf("Registrando rotas do acompanhamento\n")

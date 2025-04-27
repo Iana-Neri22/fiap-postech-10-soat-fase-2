@@ -1,44 +1,34 @@
 package bootstrap
 
 import (
-	"log"
-
 	"github.com/spf13/viper"
 )
 
 type Env struct {
-	AppEnv                 string `mapstructure:"APP_ENV"`
-	ServerAddress          string `mapstructure:"SERVER_ADDRESS"`
-	ContextTimeout         int    `mapstructure:"CONTEXT_TIMEOUT"`
-	DBHost                 string `mapstructure:"DB_HOST"`
-	DBPort                 string `mapstructure:"DB_PORT"`
-	DBUser                 string `mapstructure:"DB_USER"`
-	DBPass                 string `mapstructure:"DB_PASS"`
-	DBName                 string `mapstructure:"DB_NAME"`
-	AccessToken 		  string `mapstructure:"ACCESS_TOKEN"`
-	AccessTokenExpiryHour  int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
-	RefreshTokenExpiryHour int    `mapstructure:"REFRESH_TOKEN_EXPIRY_HOUR"`
-	AccessTokenSecret      string `mapstructure:"ACCESS_TOKEN_SECRET"`
-	RefreshTokenSecret     string `mapstructure:"REFRESH_TOKEN_SECRET"`
+	ServerAddress string
+	Port         string
+	DBHost       string
+	DBPort       string
+	DBName       string
+	DBUser       string
+	DBPass       string
 }
 
 func NewEnv() *Env {
-	env := Env{}
 	viper.SetConfigFile(".env")
+	viper.AutomaticEnv()
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal("Can't find the file .env : ", err)
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err)
 	}
 
-	err = viper.Unmarshal(&env)
-	if err != nil {
-		log.Fatal("Environment can't be loaded: ", err)
+	return &Env{
+		ServerAddress: viper.GetString("SERVER_ADDRESS"),
+		Port:         viper.GetString("PORT"),
+		DBHost:       viper.GetString("DB_HOST"),
+		DBPort:       viper.GetString("DB_PORT"),
+		DBName:       viper.GetString("DB_NAME"),
+		DBUser:       viper.GetString("DB_USER"),
+		DBPass:       viper.GetString("DB_PASS"),
 	}
-
-	if env.AppEnv == "development" {
-		log.Println("The App is running in development env")
-	}
-
-	return &env
 }

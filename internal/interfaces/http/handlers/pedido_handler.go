@@ -7,7 +7,7 @@ import (
 	response "lanchonete/internal/interfaces/http/responses"
 	"lanchonete/usecases"
 	"net/http"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,6 +52,7 @@ func (h *PedidoHandler) CriarPedido(r *gin.Context) {
 	}
 
 	for _, produto := range pedido.Produtos {
+		fmt.Println(produto.Identificacao)
 		_, err = h.ProdutoBuscarPorIdUseCase.Run(r, produto.Identificacao)
 		if err != nil {
 			r.JSON(http.StatusBadRequest, response.ErrorResponse{Message: "Produto não Cadastrado!"})

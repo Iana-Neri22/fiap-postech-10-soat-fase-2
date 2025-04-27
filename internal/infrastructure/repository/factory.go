@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"lanchonete/gateways"
 	"lanchonete/internal/domain/repository"
 	"lanchonete/infra/database/mongo"
+	"lanchonete/infra/database/mongo/repositories"
 )
 
 // RepositorioFactory é responsável por criar instâncias de repositórios
@@ -20,25 +20,25 @@ func NovoRepositorioFactory(db mongo.Database) *RepositorioFactory {
 
 // CriarPedidoRepository cria uma instância de PedidoRepository
 func (f *RepositorioFactory) CriarPedidoRepository() repository.PedidoRepository {
-	return gateways.NewPedidoGateway(f.db, mongo.CollectionPedido)
+	return repositories.NewPedidoMongoRepository(f.db, mongo.CollectionPedido)
 }
 
 // CriarProdutoRepository cria uma instância de ProdutoRepository
 func (f *RepositorioFactory) CriarProdutoRepository() repository.ProdutoRepository {
-	return gateways.NewProdutoGateway(f.db, mongo.CollectionProduto)
+	return repositories.NewProdutoMongoRepository(f.db, mongo.CollectionProduto)
 }
 
 // CriarClienteRepository cria uma instância de ClienteRepository
 func (f *RepositorioFactory) CriarClienteRepository() repository.ClienteRepository {
-	return gateways.NewClienteRepository(f.db, mongo.CollectionCliente)
+	return repositories.NewClienteMongoRepository(f.db, mongo.CollectionCliente)
 }
 
 // CriarPagamentoRepository cria uma instância de PagamentoRepository
 func (f *RepositorioFactory) CriarPagamentoRepository() repository.PagamentoRepository {
-	return gateways.NewPagamentoRepository(f.db, mongo.CollectionPagamento)
+	return repositories.NewPagamentoMongoRepository(f.db, mongo.CollectionPagamento)
 }
 
 // CriarAcompanhamentoRepository cria uma instância de AcompanhamentoRepository
 func (f *RepositorioFactory) CriarAcompanhamentoRepository() repository.AcompanhamentoRepository {
-	return gateways.NewAcompanhamentoRepository(f.db, mongo.CollectionAcompanhamento)
+	return repositories.NewAcompanhamentoMongoRepository(f.db, mongo.CollectionAcompanhamento)
 } 
