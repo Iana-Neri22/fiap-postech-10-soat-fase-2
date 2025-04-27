@@ -17,11 +17,11 @@ import (
 func NewAcompanhamentoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	// Criar fábricas
 	repositorioFactory := repository.NovoRepositorioFactory(db)
-	casoDeUsoFactory := factory.NovoCasoDeUsoFactory(repositorioFactory)
+	useCaseFactory := factory.NovoUseCaseFactory(repositorioFactory)
 	
 	// Criar casos de uso
 	acompanhamentoUseCase := appusecases.NewAcompanhamentoUseCase(repositorioFactory.CriarAcompanhamentoRepository())
-	pedidoAtualizarStatusUseCase := casoDeUsoFactory.CriarPedidoAtualizarStatusUseCase()
+	pedidoAtualizarStatusUseCase := useCaseFactory.CriarPedidoAtualizarStatusUseCase()
 	
 	auc := &handler.AcompanhamentoHandler{
 		AcompanhamentoUseCase:        acompanhamentoUseCase,

@@ -5,39 +5,39 @@ import (
 	"lanchonete/usecases"
 )
 
-// CasoDeUsoFactory é responsável por criar instâncias de casos de uso
-type CasoDeUsoFactory struct {
+// UseCaseFactory é responsável por criar instâncias de casos de uso
+type UseCaseFactory struct {
 	repositorioFactory *repository.RepositorioFactory
 }
 
-// NovoCasoDeUsoFactory cria uma nova instância de CasoDeUsoFactory
-func NovoCasoDeUsoFactory(repositorioFactory *repository.RepositorioFactory) *CasoDeUsoFactory {
-	return &CasoDeUsoFactory{
+// NovoUseCaseFactory cria uma nova instância de UseCaseFactory
+func NovoUseCaseFactory(repositorioFactory *repository.RepositorioFactory) *UseCaseFactory {
+	return &UseCaseFactory{
 		repositorioFactory: repositorioFactory,
 	}
 }
 
 // CriarPedidoIncluirUseCase cria uma instância de PedidoIncluirUseCase
-func (f *CasoDeUsoFactory) CriarPedidoIncluirUseCase() *usecases.PedidoIncluirUseCase {
+func (f *UseCaseFactory) CriarPedidoIncluirUseCase() *usecases.PedidoIncluirUseCase {
 	return usecases.NewPedidoIncluirUseCase(f.repositorioFactory.CriarPedidoRepository())
 }
 
 // CriarPedidoBuscarPorIdUseCase cria uma instância de PedidoBuscarPorIdUseCase
-func (f *CasoDeUsoFactory) CriarPedidoBuscarPorIdUseCase() *usecases.PedidoBuscarPorIdUseCase {
+func (f *UseCaseFactory) CriarPedidoBuscarPorIdUseCase() *usecases.PedidoBuscarPorIdUseCase {
 	return usecases.NewPedidoBuscarPorIdUseCase(f.repositorioFactory.CriarPedidoRepository())
 }
 
 // CriarPedidoAtualizarStatusUseCase cria uma instância de PedidoAtualizarStatusUseCase
-func (f *CasoDeUsoFactory) CriarPedidoAtualizarStatusUseCase() *usecases.PedidoAtualizarStatusUseCase {
+func (f *UseCaseFactory) CriarPedidoAtualizarStatusUseCase() *usecases.PedidoAtualizarStatusUseCase {
 	return usecases.NewPedidoAtualizarStatusUseCase(f.repositorioFactory.CriarPedidoRepository())
 }
 
 // CriarPedidoListarTodosUseCase cria uma instância de PedidoListarTodosUseCase
-func (f *CasoDeUsoFactory) CriarPedidoListarTodosUseCase() *usecases.PedidoListarTodosUseCase {
+func (f *UseCaseFactory) CriarPedidoListarTodosUseCase() *usecases.PedidoListarTodosUseCase {
 	return usecases.NewPedidoListarTodosUseCase(f.repositorioFactory.CriarPedidoRepository())
 }
 
 // CriarProdutoBuscarPorIdUseCase cria uma instância de ProdutoBuscaPorIdUseCase
-func (f *CasoDeUsoFactory) CriarProdutoBuscarPorIdUseCase() *usecases.ProdutoBuscaPorIdUseCase {
+func (f *UseCaseFactory) CriarProdutoBuscarPorIdUseCase() *usecases.ProdutoBuscaPorIdUseCase {
 	return usecases.NewProdutoBuscaPorIdUseCase(f.repositorioFactory.CriarProdutoRepository())
 } 

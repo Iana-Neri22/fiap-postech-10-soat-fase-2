@@ -14,14 +14,14 @@ import (
 func NovoPedidoRouter(env *bootstrap.Env, db mongo.Database, router *gin.RouterGroup) {
 	// Criar fábricas
 	repositorioFactory := repository.NovoRepositorioFactory(db)
-	casoDeUsoFactory := factory.NovoCasoDeUsoFactory(repositorioFactory)
+	useCaseFactory := factory.NovoUseCaseFactory(repositorioFactory)
 	
 	// Criar casos de uso
-	pedidoIncluirUseCase := casoDeUsoFactory.CriarPedidoIncluirUseCase()
-	pedidoBuscarPorIdUseCase := casoDeUsoFactory.CriarPedidoBuscarPorIdUseCase()
-	pedidoAtualizarStatusUseCase := casoDeUsoFactory.CriarPedidoAtualizarStatusUseCase()
-	produtoBuscarPorIdUseCase := casoDeUsoFactory.CriarProdutoBuscarPorIdUseCase()
-	pedidoListarTodosUseCase := casoDeUsoFactory.CriarPedidoListarTodosUseCase()
+	pedidoIncluirUseCase := useCaseFactory.CriarPedidoIncluirUseCase()
+	pedidoBuscarPorIdUseCase := useCaseFactory.CriarPedidoBuscarPorIdUseCase()
+	pedidoAtualizarStatusUseCase := useCaseFactory.CriarPedidoAtualizarStatusUseCase()
+	produtoBuscarPorIdUseCase := useCaseFactory.CriarProdutoBuscarPorIdUseCase()
+	pedidoListarTodosUseCase := useCaseFactory.CriarPedidoListarTodosUseCase()
 	
 	// Criar handler
 	puc := &handler.PedidoHandler{
