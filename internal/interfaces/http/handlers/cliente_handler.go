@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"net/http"
-	_"lanchonete/docs"
-	"lanchonete/usecases"
-	"lanchonete/internal/domain/entities"
+	_ "lanchonete/docs"
 	"lanchonete/internal/application/presenters"
+	"lanchonete/internal/domain/entities"
 	response "lanchonete/internal/interfaces/http/responses"
-	
+	"lanchonete/usecases"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,7 @@ type ClienteHandler struct {
 }
 
 // CriarCliente godoc
-// @Summary Cria um cliente	
+// @Summary Cria um cliente
 // @Description Cria um cliente
 // @Tags cliente
 // @Router /cliente [post]
