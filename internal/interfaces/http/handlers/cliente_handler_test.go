@@ -33,7 +33,7 @@ func (m *MockClienteUseCase) BuscarCliente(ctx context.Context, cpf string) (*en
 	return args.Get(0).(*entities.Cliente), args.Error(1)
 }
 
-func setupTestRouter() (*gin.Engine, *MockClienteUseCase) {
+func setupClienteTestRouter() (*gin.Engine, *MockClienteUseCase) {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
 
@@ -50,7 +50,7 @@ func setupTestRouter() (*gin.Engine, *MockClienteUseCase) {
 }
 
 func TestCriarCliente(t *testing.T) {
-	router, mockCliente := setupTestRouter()
+	router, mockCliente := setupClienteTestRouter()
 
 	tests := []struct {
 		name           string
@@ -107,7 +107,7 @@ func TestCriarCliente(t *testing.T) {
 }
 
 func TestBuscarCliente(t *testing.T) {
-	router, mockCliente := setupTestRouter()
+	router, mockCliente := setupClienteTestRouter()
 
 	tests := []struct {
 		name           string
